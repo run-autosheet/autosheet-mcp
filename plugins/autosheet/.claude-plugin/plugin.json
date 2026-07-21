@@ -1,0 +1,26 @@
+{
+  "name": "autosheet",
+  "version": "0.1.6",
+  "description": "Run Autosheet AI agents against Google Sheets from Claude Code",
+  "author": {
+    "name": "Autosheet",
+    "url": "https://autosheet.com"
+  },
+  "homepage": "https://autosheet.com",
+  "repository": "https://github.com/run-autosheet/autosheet-mcp",
+  "license": "MIT",
+  "keywords": [
+    "google-sheets",
+    "ai-agent",
+    "spreadsheet",
+    "automation",
+    "autosheet"
+  ],
+  "mcpServers": {
+    "autosheet": {
+      "type": "http",
+      "url": "https://mcp.autosheet.com/mcp/"
+    }
+  },
+  "skills": "./skills/"
+}

@@ -1,0 +1,38 @@
+{
+  "name": "autosheet",
+  "version": "0.1.6",
+  "description": "Run Autosheet AI agents against Google Sheets from Codex",
+  "author": {
+    "name": "Autosheet",
+    "url": "https://autosheet.com"
+  },
+  "homepage": "https://autosheet.com",
+  "repository": "https://github.com/run-autosheet/autosheet-mcp",
+  "license": "MIT",
+  "keywords": [
+    "google-sheets",
+    "ai-agent",
+    "spreadsheet",
+    "automation",
+    "autosheet"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Autosheet",
+    "shortDescription": "Run AI agents against Google Sheets.",
+    "longDescription": "Use Autosheet AI agents to transform, clean, classify, translate, validate, and analyze Google Sheets.",
+    "developerName": "Autosheet",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://autosheet.com",
+    "defaultPrompt": [
+      "Translate a column in my Google Sheet.",
+      "Categorize and enrich leads in my spreadsheet.",
+      "Clean and validate data in my Google Sheet."
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "autosheet",
+  "owner": {
+    "name": "Autosheet"
+  },
+  "metadata": {
+    "description": "Official Autosheet plugin marketplace for Claude Code",
+    "version": "0.1.6"
+  },
+  "plugins": [
+    {
+      "name": "autosheet",
+      "source": "./plugins/autosheet",
+      "description": "Run Autosheet AI agents against Google Sheets from Claude Code",
+      "version": "0.1.6",
+      "author": {
+        "name": "Autosheet"
+      },
+      "category": "productivity",
+      "homepage": "https://autosheet.com"
+    }
+  ]
+}

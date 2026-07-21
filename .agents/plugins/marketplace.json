@@ -1,0 +1,20 @@
+{
+  "name": "autosheet",
+  "interface": {
+    "displayName": "Autosheet"
+  },
+  "plugins": [
+    {
+      "name": "autosheet",
+      "source": {
+        "source": "local",
+        "path": "./plugins/autosheet"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
