@@ -4,11 +4,18 @@ The official [Autosheet](https://autosheet.com) plugin: run AI agents against Go
 
 ## Install the plugin
 
-### Claude (web & desktop)
+### Claude Desktop
 
-1. Go to **Settings → Plugins**
-2. Click **Add marketplace**, enter `run-autosheet/autosheet-mcp`, and sync
-3. Install **Autosheet**
+> **Using Claude in your browser?** Install Autosheet as an [MCP connector](#claude-web--desktop-mcp-only) instead. Installing the plugin in Claude Desktop also does not install it in Claude Code; follow the [separate Claude Code steps](#claude-code) if that is where you want to use it.
+
+1. Open **Claude Desktop**, then go to **Customize → Plugins**
+2. Click the small **+** button at the far right of the Plugins screen
+
+   ![The Claude Desktop plugin directory with the Add marketplace plus button highlighted](docs/images/claude-desktop-add-marketplace.png)
+
+3. Select **Add marketplace**, enter `run-autosheet/autosheet-mcp`, and sync
+4. Find **Autosheet** in the marketplace and click **Install**
+5. Start a new chat before using Autosheet for the first time
 
 ### ChatGPT (Business & Enterprise)
 
@@ -23,12 +30,25 @@ Plugins are added by a workspace admin. On individual plans, use the [MCP server
 
 ### Claude Code
 
+Run these commands inside Claude Code:
+
 ```
 /plugin marketplace add run-autosheet/autosheet-mcp
 /plugin install autosheet@autosheet
 ```
 
-The first time you invoke an Autosheet tool, Claude Code opens your browser to complete the OAuth flow.
+Then:
+
+1. Start a new Claude Code session so the Autosheet MCP tools are registered
+2. Run `/mcp`
+3. Select **autosheet** and authenticate; Claude Code opens your browser to complete the OAuth flow
+4. Return to Claude Code once Autosheet shows as connected, then submit your spreadsheet request
+
+You do not need to find or paste an OAuth token into your prompt. `/mcp` handles the authentication flow and stores the credentials.
+
+If Claude says that Autosheet requires authentication or that its MCP tools are not registered, stop retrying the spreadsheet request and run `/mcp` first:
+
+![Claude Code reporting that the Autosheet MCP server needs authentication](docs/images/claude-code-oauth-required.png)
 
 ### Codex
 
@@ -61,7 +81,7 @@ codex plugin add autosheet@autosheet
 
 If you can't install the plugin — or you use another MCP-capable client — the hosted MCP server works standalone at `https://mcp.autosheet.com/mcp`. You get the same tools, just without the bundled skills.
 
-### Claude (web & desktop)
+### Claude web & desktop (MCP only)
 
 1. Go to **Settings → Connectors → Add custom connector**
 2. Enter the URL `https://mcp.autosheet.com/mcp`
