@@ -8,7 +8,7 @@ Public distribution repo for the Autosheet Claude Code / Codex plugin. It contai
 
 - `.claude-plugin/marketplace.json` — Claude Code marketplace (name: `autosheet`)
 - `.agents/plugins/marketplace.json` — Codex marketplace (name: `autosheet`)
-- `plugins/autosheet/` — the plugin: skills + MCP configuration for the hosted server at `https://mcp.autosheet.com/mcp/`
+- `plugins/autosheet/` — the plugin: skills + MCP configuration for the hosted server at `https://mcp.autosheet.com/mcp`
 
 The MCP server source is **not** in this repo and is not open source.
 
@@ -18,11 +18,8 @@ The MCP server source is **not** in this repo and is not open source.
 - **Versioning**: this repo only ever carries clean release versions (`X.Y.Z`). Pre-release/beta versions (`X.Y.Z-beta.N`) live in the internal upstream repo only.
 - **Plugin renames/removals** must go through a top-level `renames` map in `.claude-plugin/marketplace.json` so existing installs migrate instead of erroring.
 
-## MCP configuration — do not "clean up"
+## MCP configuration
 
-The plugin intentionally carries **two** MCP configs for the same server name (`autosheet`):
+All clients share the single direct-HTTPS config in `plugins/autosheet/.mcp.json` (`https://mcp.autosheet.com/mcp`) — Claude auto-discovers it at the plugin root, and the Codex manifest references it explicitly. **Never add `command`-based (stdio/npx) MCP servers**: ChatGPT rejects them at import, and security scans flag runtime package fetching as a supply-chain vector (OWASP MCP Top 10). The former `npx mcp-remote` bridge for Codex was removed once the server started serving the MCP handshake anonymously and stopped advertising RFC 9207 `iss` support (workaround for [openai/codex#31573](https://github.com/openai/codex/issues/31573)).
 
-- `plugins/autosheet/.claude-plugin/plugin.json` → inline `mcpServers`: direct HTTP connection, used by **Claude Code**
-- `plugins/autosheet/.mcp.json` → `npx mcp-remote` stdio bridge, used by **Codex** (workaround for an upstream Codex OAuth issuer bug, [openai/codex#31573](https://github.com/openai/codex/issues/31573))
-
-Claude Code auto-discovers `.mcp.json` in plugin roots too, but when the same server name is defined both inline and in `.mcp.json`, the inline definition takes precedence (verified empirically 2026-07-21; this precedence is undocumented). This collision is deliberate — it keeps Claude Code on the direct HTTP connection while Codex uses the bridge. Do not merge or deduplicate these files.
+Transitional note: `.claude-plugin/plugin.json` still carries a legacy inline `mcpServers` block with the same server name. Claude Code gives the inline definition precedence over `.mcp.json` (verified empirically 2026-07-21; undocumented) — both now point at the same server, and the inline block is removed upstream and will disappear with the next release promotion. Don't re-add it.

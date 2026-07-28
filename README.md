@@ -52,14 +52,12 @@ If Claude says that Autosheet requires authentication or that its MCP tools are 
 
 ### Codex
 
-Requires Node.js 18+ with `npx` available.
-
 ```bash
 codex plugin marketplace add run-autosheet/autosheet-mcp
 codex plugin add autosheet@autosheet
 ```
 
-Start a new Codex task after installation. The first time you invoke an Autosheet tool, the pinned `mcp-remote` compatibility bridge opens your browser to complete the OAuth flow. The bridge works around [an upstream Codex OAuth regression](https://github.com/openai/codex/issues/31573) and will be removed once Codex handles RFC 9207 issuer parameters correctly.
+Start a new Codex task after installation. The first time you invoke an Autosheet tool, Codex opens your browser to complete the OAuth flow.
 
 ### Updating the plugin
 
