@@ -21,12 +21,10 @@ The official [Autosheet](https://autosheet.com) plugin: run AI agents against Go
 
 Plugins are added by a workspace admin. On individual plans, use the [MCP server](#use-the-mcp-server-only) instead.
 
-1. Download the latest `autosheet-plugin-<version>.zip` from [Releases](https://github.com/run-autosheet/autosheet-mcp/releases)
-2. Go to [chatgpt.com/admin/plugins](https://chatgpt.com/admin/plugins)
-3. Click **Create → Upload plugin** and upload the archive
-4. Once added, workspace members can enable **Autosheet**
-
-> **Note:** adding this repository via **Import from GitHub** temporarily fails. Use the upload method above until that is resolved.
+1. Go to [chatgpt.com/admin/plugins](https://chatgpt.com/admin/plugins)
+2. Click **Create → Import from GitHub**
+3. Enter the source `https://github.com/run-autosheet/autosheet-mcp`, branch `main`, and the sparse path `plugins/autosheet`
+4. Click **Import from GitHub** — once imported, workspace members can enable **Autosheet**
 
 ### Claude Code
 
