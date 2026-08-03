@@ -1,6 +1,6 @@
 # Autosheet MCP
 
-Autosheet MCP is a hosted remote MCP server. It lets compatible MCP clients run the Autosheet spreadsheet agent directly in your existing Google Sheets spreadsheets. You describe the work in plain language, and the agent carries it out in the spreadsheet.
+Autosheet MCP is a hosted remote MCP server. It lets compatible MCP clients run the **Autosheet spreadsheet agent** directly in your existing Google Sheets spreadsheets. You describe the work in plain language, and the agent carries it out in the spreadsheet.
 
 You do not install or run a server. Autosheet MCP is hosted by Autosheet at a single address:
 
@@ -8,16 +8,17 @@ You do not install or run a server. Autosheet MCP is hosted by Autosheet at a si
 https://mcp.autosheet.com/mcp
 ```
 
-The server uses stateless Streamable HTTP transport. Access is authenticated with OAuth. The first time your client calls an Autosheet tool, it opens your browser so you can sign in. Clients can list the available tools before signing in; running one requires sign-in.
+Autosheet MCP uses stateless Streamable HTTP transport. Access is authenticated with OAuth. The first time your client calls an Autosheet tool, it opens your browser so you can sign in. Clients can list the available tools before signing in; running one requires sign-in.
 
-There are two ways to set Autosheet up:
+You can set up Autosheet MCP in one of two ways:
 
 - **Connect directly to the hosted server.** This works in every client covered below and gives you the full set of Autosheet tools.
-- **Install an optional package from this repository.** Packages are available for some clients. A package can add skills and setup convenience on top of the same hosted server. It does not add tools and does not change what the spreadsheet agent can do.
 
-This repository is the canonical documentation for Autosheet MCP, and it is where the optional packages are distributed from. The MCP server source is not in this repository.
+- **Install an optional plugin from this repository.** Plugins are available for some clients. A plugins adds skills and setup convenience on top of the same hosted server. A plugin does not add tools and does not change what the spreadsheet agent can do.
 
-Dedicated setup instructions are provided for Claude, Claude Code, ChatGPT, Codex, and Gemini CLI. Any other MCP client that supports remote servers over Streamable HTTP with OAuth can also connect.
+This repository is the canonical documentation for Autosheet MCP, and it is where the optional plugins are distributed from. The MCP server source is not in this repository.
+
+Dedicated setup instructions are provided for [Claude](#claude), [Claude Code](#claude-code), [ChatGPT](#chatgpt), [Codex](#codex), and [Gemini CLI](#gemini-cli). You can also use [any other MCP client](#other-compatible-mcp-clients) that supports remote servers over Streamable HTTP with OAuth.
 
 For more about the product, see [autosheet.com](https://autosheet.com/).
 
@@ -27,270 +28,213 @@ For more about the product, see [autosheet.com](https://autosheet.com/).
 
 To use Autosheet MCP you need:
 
-- A GPT for Work account.
-- Membership of a GPT for Work space that has usage or credits available. You can be the owner, an admin, or a member of that space. A space is the administrative hub for GPT for Work: it centralizes purchases, billing, usage controls, and API keys for one person or a team. See [Spaces in the GPT for Work documentation](https://gptforwork.com/docs/resources/guides/concepts#space). Usage and credits belong to the space, not to an individual user.
+- GPT for Work account.
+
+- Membership of a [GPT for Work space](https://gptforwork.com/docs/resources/guides/concepts#space) that has usage or credits available.
+
 - Edit access to the Google Sheets spreadsheets you want the agent to work on.
 
 **Signing in.** Your client authenticates to Autosheet MCP with OAuth. The first Autosheet tool call opens a browser window for sign-in. After that, your client stores the credentials and reuses them. Separately, the agent works on spreadsheets through your Google account, so it can only reach spreadsheets that your account is allowed to edit.
 
-**Approving tool calls.** MCP clients ask you to approve tool calls before they run. Where that prompt appears, how it is worded, and whether you can pre-approve a tool all vary by client. The tools that start work declare themselves as making changes, so clients that act on that will prompt you before the agent touches a spreadsheet; checking status is declared read-only and is usually not prompted. Keep approval required for the tools that make changes rather than allowing them automatically. See [Important behavior and safe use](#important-behavior-and-safe-use).
+**Approving tool calls.** MCP clients ask you to approve tool calls before they run. Where that prompt appears, how it is worded, and whether you can pre-approve a tool all vary by client. The tools that start work declare themselves as making changes, so clients that act on that will prompt you before the agent touches a spreadsheet; checking status is declared read-only and is usually not prompted. Keep approval required for the tools that make changes rather than allowing them automatically. For more information, see [Important behavior and safe use](#important-behavior-and-safe-use).
 
-**Telling the agent which spreadsheet to use.** Give the agent either the full Google Sheets URL or the bare spreadsheet ID. In a URL such as `https://docs.google.com/spreadsheets/d/SPREADSHEET_ID/edit`, the ID is the part between `/d/` and `/edit`.
+**Telling the agent which spreadsheet to use.** Give the agent either the full Google Sheets URL or the bare spreadsheet ID. In a URL, the ID is the part between `/d/` and `/edit`. For example, in the URL `https://docs.google.com/spreadsheets/d/1etZyGGQPami0R9D2W6WlJMWbrd_JvStLDdsteFegnko/edit`, the ID is `1etZyGGQPami0R9D2W6WlJMWbrd_JvStLDdsteFegnko`.
 
 **Telling the agent which sheet to work on.** Copy the URL while the sheet you want is open. A Google Sheets URL carries a tab id, such as `#gid=123456`, and the agent starts on that sheet. A bare spreadsheet ID, or a URL without a tab id, starts the agent on the first sheet. Either way, naming a sheet in your instruction takes precedence — for example, "clean up the emails on the Contacts sheet". The agent can explore the spreadsheet and move between sheets as the work requires, so the starting sheet is a starting point rather than a boundary.
 
 ### Claude
 
-#### Connect from the Claude Connectors Directory
+#### Install the Autosheet connector for Claude
 
-The Claude Connectors Directory lists connectors you can add without entering a server URL.
-
-> **[TODO — Connectors Directory listing]** Autosheet is not yet listed in the Claude
-> Connectors Directory. The listing is pending the connector submission. Until it is
-> live, use [Add Autosheet as a custom connector](#add-autosheet-as-a-custom-connector).
-
-To browse the Claude Connectors Directory:
+The Claude Connectors Directory lists connectors you can add without configuring a server URL.
 
 1. Open Claude in your browser or in the Claude desktop app.
-2. Select **Customize** in the left sidebar.
-3. Select the **Connectors** tab.
-4. Select the **+** button.
-5. Select **Browse connectors**.
 
-#### Add Autosheet as a custom connector
+1. In the main sidebar, click your user name and select **Settings**.
+
+1. In the settings sidebar, select **Customize > Connectors**.
+
+1. Click **Add > Browse connectors**.
+
+1. Search for `Autosheet`.
+
+1. Click the **+** button for **Autosheet**.
+
+1. Follow the on-screen instructions to authenticate to the Autosheet MCP server.
+
+#### Install the Autosheet plugin for Claude
+
+This repository publishes a custom marketplace containing an Autosheet plugin. The plugin bundles a skill that helps Claude phrase spreadsheet work well and handle long runs.
 
 1. Open Claude in your browser or in the Claude desktop app.
-2. Select **Customize** in the left sidebar.
-3. Select the **Connectors** tab.
-4. Select the **+** button.
-5. Select **Add custom connector**.
-6. In the name field, enter `Autosheet`.
-7. In the URL field, enter `https://mcp.autosheet.com/mcp`.
-8. Select **Add**.
-9. Start a chat and ask for spreadsheet work. The first Autosheet tool call opens your browser so you can sign in.
 
-<!-- TODO screenshot: Claude's Add custom connector dialog, showing the name and URL fields filled in. -->
+1. In the main sidebar, click your user name and select **Settings**.
 
-On the Claude Free plan you can have one custom connector at a time.
+1. In the settings sidebar, select **Customize > Plugins**.
 
-On Team and Enterprise plans, an Owner or Primary Owner has to enable the connector for the organization before members can use it. Each member then signs in individually the first time they use an Autosheet tool.
+1. Click **Add > Add marketplace**.
 
-> **[TODO — Claude Team and Enterprise]** The Owner or Primary Owner enable flow is
-> pending verification by someone with the necessary rights.
+1. Click **Add from a repository**.
 
-#### Install the optional package from a custom marketplace
+1. Define the marketplace settings:
 
-This repository publishes a custom marketplace containing an Autosheet package. The package bundles a skill that helps Claude phrase spreadsheet work well and handle long runs. It connects to the same hosted server as a custom connector does. It is not listed in the Claude Connectors Directory.
+   - **URL**: Enter `https://github.com/run-autosheet/autosheet-mcp`.
 
-Installing the package in the Claude desktop app does not install it in Claude Code. See [Claude Code](#claude-code) if you want it there as well.
+   - **Sync automatically**: Enable to automatically keep the plugin up to date when it changes in the GitHub repository. If enabled, you need to set up the Claude GitHub App.
 
-1. Open the Claude desktop app.
-2. Select **Customize** in the left sidebar.
-3. Select the **Plugins** tab.
-4. Select the **+** button at the far right.
+1. Click **Sync**.
 
-   ![The Plugins tab of Claude's unified skills, connectors, and plugins listing, with the add-marketplace + button highlighted](docs/images/claude-desktop-add-marketplace.png)
+1. In the personal plugins list, click **Autosheet**.
 
-5. Select **Add marketplace**.
-6. Enter `run-autosheet/autosheet-mcp` and sync.
-7. Find **Autosheet** in the list and select **Install**.
-8. Start a new chat before using Autosheet for the first time.
+1. Click **Install**. The plugin installs.
+
+1. Click **Manage**.
+
+1. Select the **Connectors** tab, and click **Install** for the Autosheet connector.
+
+1. Click **Add**. The connector installs.
+
+1. In the settings sidebar, select **Customize > Connectors**.
+
+1. Click **Connect** for the Autosheet connector.
+
+1. Follow the on-screen instructions to authenticate to the Autosheet MCP server.
 
 ### Claude Code
 
-#### Connect to the hosted server
+#### Connect Claude Code to the Autosheet MCP server
 
-1. Run this command in your terminal:
+> **NOTE!** If you've [installed the Autosheet connector for Claude](#install-the-autosheet-connector-for-claude), Claude Code is already connected to the Autosheet MCP server — provided you're signed in to Claude Code with the same Claude user account.
+
+1. Open your terminal and run the following command:
 
    ```bash
    claude mcp add --transport http autosheet https://mcp.autosheet.com/mcp
    ```
 
-   This adds the server for the current project only. Add `--scope user` to make it available in all your projects.
+   This adds the server for the current project only. To make the server available in all your projects, append the command with `--scope user`:
 
-2. Start a new Claude Code session so the server is loaded.
-3. Run `/mcp`.
-4. Select **autosheet** and choose to authenticate. Claude Code opens your browser to complete the OAuth flow.
-5. Return to Claude Code once Autosheet shows as connected, then describe the spreadsheet work you want done.
+   ```bash
+   claude mcp add --transport http autosheet https://mcp.autosheet.com/mcp --scope user
+   ```
 
-You do not need to find or paste a token into your prompt. `/mcp` runs the sign-in flow and stores the credentials.
+1. Start a new Claude Code session.
 
-If Claude reports that Autosheet needs authentication, or that its tools are not registered, stop retrying the spreadsheet request and run `/mcp` first:
+1. Run `/mcp`, select `autosheet`, and select `Authenticate`. Follow the on-screen instructions to authenticate to the Autosheet MCP server.
 
-![Claude Code reporting that the Autosheet MCP server needs authentication](docs/images/claude-code-oauth-required.png)
+#### Install the Autosheet plugin for Claude Code
 
-#### Install the optional package from a custom marketplace
+This repository publishes a custom marketplace containing an Autosheet plugin. The plugin bundles a skill that helps Claude Code phrase spreadsheet work well and handle long runs.
 
-The package bundles a skill on top of the same hosted server. Install it in addition to, or instead of, adding the server with `claude mcp add` — the package supplies its own server configuration.
+1. Start a new Claude Code session.
 
-1. Run this command inside Claude Code:
+1. Run the following command to add the Autosheet custom marketplace:
 
    ```text
    /plugin marketplace add run-autosheet/autosheet-mcp
    ```
 
-2. Run this command:
+1. Run the following command to install the Autosheet plugin:
 
    ```text
    /plugin install autosheet@autosheet
    ```
 
-3. Run `/reload-plugins`, or start a new session, so the skill and the Autosheet tools are loaded.
-4. Run `/mcp`, select **autosheet**, and authenticate.
+   The command prompts for the scope in which you want to install the plugin, so select the appropriate one.
 
-With the package installed, you can start spreadsheet work with the `/autosheet` slash command as well as by describing the work in plain language. The slash command comes from the package. It is not available if you only connected to the hosted server.
+1. Run `/reload-plugins` to load the Autosheet tools and skill.
 
-> **[TODO — slash command name]** Claude Code namespaces package-supplied skills as
-> `/<plugin-name>:<skill-name>`, which would make this `/autosheet:autosheet` rather than
-> `/autosheet`. The command has not been confirmed against an installed package. Verify
-> which form is correct before publication.
+1. Run `/mcp`, select `plugin:autosheet:autosheet`, and select `Authenticate`. Follow the on-screen instructions to authenticate to the Autosheet MCP server.
 
-To update the package later, refresh the marketplace and reload:
-
-```text
-/plugin marketplace update autosheet
-/reload-plugins
-```
+You can now explicitly invoke the Autosheet skill with the `/autosheet:autosheet` slash command, followed by plain-language instructions. However, since the skill is also model-invoked, any spreadsheet-specific instructions will likely invoke without explicitly naming it.
 
 ### ChatGPT
 
-#### What ChatGPT plans can do
+#### Configure an Autosheet custom plugin for ChatGPT
 
-The Autosheet spreadsheet agent applies changes to your spreadsheets. That is a write action.
-
-**On individual ChatGPT plans, custom MCP connectors are read-only, even with developer mode enabled.** This has been confirmed by testing. A direct custom connector on an individual plan can connect to Autosheet MCP and sign in, but it cannot perform the spreadsheet work Autosheet exists to do. Write actions are available only in Business, Enterprise, and Education workspaces.
-
-If you are on an individual plan and need the agent to change spreadsheets, use one of the other clients in this guide.
-
-#### Add Autosheet as a custom connector
-
-Developer mode is available on the web for Pro, Plus, Business, Enterprise, and Education accounts. The ChatGPT interface calls these items **plugins**.
+You can connect ChatGPT to the Autosheet MCP server by configuring a custom plugin. You need to enable developer mode to install and use custom plugins.
 
 1. Open ChatGPT in your browser.
-2. Go to **Settings → Security and login**.
-3. Turn on **Developer mode**.
 
-   <!-- TODO screenshot: ChatGPT Settings > Security and login, with the Developer mode toggle. -->
+1. In the main sidebar, click your user name and select **Settings**.
 
-4. Create a custom plugin and enter the server URL `https://mcp.autosheet.com/mcp`.
-5. Sign in to Autosheet when prompted.
+1. Enable developer mode:
 
-A custom personal plugin is visible in the Plugins interface once developer mode is enabled. Plugins can be public or personal.
+   1. In the settings sidebar, select **Plugins**.
 
-> **[TODO — ChatGPT personal plugins]** Two things are unresolved here. The interface
-> path for creating the custom plugin in step 4 is not confirmed, so the step does not
-> name a menu. And it is not known whether a custom personal plugin is subject to the
-> same read-only restriction as a custom connector on individual plans. Neither has been
-> tested.
+   1. At the bottom of the panel, select **Developer mode**.
 
-#### Import the optional package (Business, Enterprise, and Education)
+   1. Enable **Developer mode**.
 
-A workspace admin imports the package. Once imported, workspace members can enable it.
+1. Install the plugin:
 
-1. Go to [chatgpt.com/admin/plugins](https://chatgpt.com/admin/plugins).
-2. Select **Create → Import from GitHub**.
-3. Enter the source `https://github.com/run-autosheet/autosheet-mcp`, the branch `main`, and the sparse path `plugins/autosheet`.
-4. Select **Import from GitHub**.
-5. Once the import finishes, workspace members can enable **Autosheet**.
+   1. In the settings sidebar, select **Plugins**.
 
-> **[TODO — ChatGPT import path]** This admin import path is pending verification by
-> someone with workspace admin rights.
+   1. At the bottom of the panel, select **Browse plugins**. The
+
+   1. At the top of the panel, click the **+** button.
+
+   1. Define the plugin settings:
+
+      - **Name**: Enter `Autosheet`.
+
+      - **Connection**: Select **Server URL** and enter `https://mcp.autosheet.com/mcp`.
+
+      - Check **I understand and want to continue**.
+
+   1. Click **Create**.
+
+   1. Follow the on-screen instructions to authenticate to the Autosheet MCP server.
 
 ### Codex
 
-The Codex CLI and the Codex IDE extension share the same configuration file.
+#### Connect Codex to the Autosheet MCP server
 
-#### Connect to the hosted server
+To make the server available to all projects:
 
-1. Open `~/.codex/config.toml` in an editor. For a project you trust, you can use `.codex/config.toml` in the project instead.
-2. Add this table:
+1. Open your terminal and run the following command:
+
+   ```bash
+   codex mcp add autosheet --url https://mcp.autosheet.com/mcp
+   ```
+
+1. Follow the on-screen instructions to authenticate to the Autosheet MCP server.
+
+To make the server available to a specific project:
+
+1. Open `<project>/.codex/config.toml` in an editor and add the following configuration:
 
    ```toml
    [mcp_servers.autosheet]
    url = "https://mcp.autosheet.com/mcp"
    ```
 
-3. Save the file.
-4. Run this command in your terminal:
+1. Save the file.
+
+1. Open your terminal, change to the project directory, and run the following command:
 
    ```bash
    codex mcp login autosheet
    ```
 
-5. Complete the sign-in in the browser window that opens.
-6. Start a new Codex task, then describe the spreadsheet work you want done.
+1. Follow the on-screen instructions to authenticate to the Autosheet MCP server.
 
-On a remote or headless machine, two settings control the OAuth callback. Set `mcp_oauth_callback_port` to use a fixed callback port, or `mcp_oauth_callback_url` to use a custom callback base.
+#### Install the Autosheet plugin for Codex
 
-#### Install the optional package from a custom marketplace
+This repository publishes a custom marketplace containing an Autosheet plugin. The plugin bundles a skill that helps Codex phrase spreadsheet work well and handle long runs.
 
-1. Run these commands in your terminal:
+1. Open your terminal and run the following commands:
 
    ```bash
    codex plugin marketplace add run-autosheet/autosheet-mcp
    codex plugin add autosheet@autosheet
    ```
 
-2. Start a new Codex task so the bundled skill and the Autosheet tools are loaded.
-3. The first time you invoke an Autosheet tool, Codex opens your browser to complete the OAuth flow.
+1. Start a new Codex session.
 
-To update the package later:
+1. Enter a prompt that invokes an Autosheet tool. This triggers the authentication flow.
 
-```bash
-codex plugin marketplace upgrade autosheet
-codex plugin add autosheet@autosheet
-```
-
-Start a new task afterwards so the updated skill and tools are loaded.
-
-### Gemini CLI
-
-Only Gemini CLI is covered here. Other Gemini surfaces have not been tested with Autosheet MCP.
-
-1. Open `~/.gemini/settings.json` in an editor. To configure one project only, use `.gemini/settings.json` in that project instead.
-2. Add an `autosheet` entry under the top-level `mcpServers` key:
-
-   ```json
-   {
-     "mcpServers": {
-       "autosheet": {
-         "httpUrl": "https://mcp.autosheet.com/mcp"
-       }
-     }
-   }
-   ```
-
-   Use `httpUrl`. The `url` key means SSE, which this server does not use, and getting it wrong fails without an error message.
-
-3. Save the file.
-4. Start Gemini CLI and run:
-
-   ```
-   /mcp auth autosheet
-   ```
-
-5. Complete the sign-in in the browser window that opens.
-
-You can let Gemini CLI discover the OAuth configuration, as above, or state it explicitly:
-
-```json
-{
-  "mcpServers": {
-    "autosheet": {
-      "httpUrl": "https://mcp.autosheet.com/mcp",
-      "oauth": { "enabled": true }
-    }
-  }
-}
-```
-
-Gemini CLI requires a browser for sign-in, so this does not work in a headless or SSH session.
-
-> **[TODO — Gemini CLI headless sign-in]** A reported workaround is to authenticate on a
-> machine that has a browser and copy `~/.gemini/mcp-oauth-tokens.json` across. This is
-> community-sourced and unverified.
-
-There is no Autosheet package for Gemini CLI. Connect to the hosted server as above.
+1. Follow the on-screen instructions to authenticate to the Autosheet MCP server.
 
 ### Other compatible MCP clients
 
