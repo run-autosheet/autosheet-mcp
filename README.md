@@ -10,9 +10,7 @@ https://mcp.autosheet.com/mcp
 
 Autosheet MCP uses stateless Streamable HTTP transport. Access is authenticated with OAuth. The first time your client calls an Autosheet tool, it opens your browser so you can sign in. Clients can list the available tools before signing in; running one requires sign-in.
 
-You set up Autosheet MCP by connecting directly to the hosted server. This works in every client covered below and gives you the full set of Autosheet tools.
-
-This repository is the canonical documentation for Autosheet MCP. The MCP server source is not in this repository.
+You set up Autosheet MCP by connecting directly to the hosted server. This works in every client covered below and gives you the [full set of Autosheet tools](#tool-reference).
 
 Dedicated setup instructions are provided for [Claude](#claude), [Claude Code](#claude-code), [ChatGPT](#chatgpt), and [Codex](#codex). You can also use [any other MCP client](#other-compatible-mcp-clients) that supports remote servers over Streamable HTTP with OAuth.
 
@@ -24,7 +22,7 @@ For more about the product, see [autosheet.com](https://autosheet.com/).
 
 To use Autosheet MCP you need:
 
-- GPT for Work account.
+- A GPT for Work account.
 
 - Membership of a [GPT for Work space](https://gptforwork.com/docs/resources/guides/concepts#space) that has usage or credits available.
 
@@ -58,7 +56,7 @@ To connect Claude to Autosheet MCP:
 
 ### Claude Code
 
-> **NOTE!** If you've [installed the Autosheet connector for Claude](#claude), Claude Code is already connected to Autosheet MCP — provided you're signed in to Claude Code with the same Claude user account.
+> **NOTE!** If you've [installed the Autosheet connector for Claude](#claude), Claude Code is already connected to Autosheet MCP — provided you're signed in to Claude Code with the same Claude user account. If you have not or cannot install the connector in Claude, follow the instructions below.
 
 To connect Claude Code to Autosheet MCP:
 
@@ -100,7 +98,7 @@ To connect ChatGPT to Autosheet MCP:
 
    1. In the settings sidebar, select **Plugins**.
 
-   1. At the bottom of the panel, select **Browse plugins**. The
+   1. At the bottom of the panel, select **Browse plugins**.
 
    1. At the top of the panel, click the **+** button.
 
@@ -118,9 +116,7 @@ To connect ChatGPT to Autosheet MCP:
 
 ### Codex
 
-To connect Codex to Autosheet MCP
-
-To make the server available to all projects:
+To connect Codex to Autosheet MCP for all projects:
 
 1. Open your terminal and run the following command:
 
@@ -130,7 +126,7 @@ To make the server available to all projects:
 
 1. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
-To make the server available to a specific project:
+To connect Codex to Autosheet MCP for a specific project:
 
 1. Open `<project>/.codex/config.toml` in an editor and add the following configuration:
 
@@ -174,7 +170,7 @@ Clients display all of this differently. Tool names, approval prompts, and progr
 | Tool | Title | What it does | Inputs |
 | --- | --- | --- | --- |
 | `autosheet_start_agent` | Start an Autosheet agent | Starts a new agent on a spreadsheet with your instruction. | `prompt`, `spreadsheet_id` |
-| `autosheet_follow_up_agent` | Follow with an Autosheet agent | Continues an existing agent conversation with a new instruction. | `prompt`, `agent_id` |
+| `autosheet_follow_up_agent` | Follow up with an Autosheet agent | Continues an existing agent conversation with a new instruction. | `prompt`, `agent_id` |
 | `autosheet_get_agent` | Get the status of an Autosheet agent | Reports the current status, messages, and progress of an agent. | `agent_id` |
 | `autosheet_stop_agent` | Stop an Autosheet agent | Stops an agent that is still running. | `agent_id` |
 
@@ -236,15 +232,17 @@ The agent can research on the web when the work needs information that is not al
 
 ## Platforms and compatibility
 
-| Client | Dedicated user guide | Direct connection | Plugin package | Restrictions to know |
-| --- | --- | --- | --- | --- |
-| Claude | Yes | Yes | No | None |
-| Claude Code | Yes | Yes | No | None |
-| ChatGPT | Yes | Yes | No | Developer mode must be enabled. |
-| Codex | Yes | Yes | No | None |
-| Other MCP clients | No | Yes, if the client supports Streamable HTTP with OAuth | No | Untested. Follow your client's own documentation. |
+| Client | Tested | Direct connection | Restrictions to know |
+| --- | --- | --- | --- |
+| Claude | Yes | Yes | None |
+| Claude Code | Yes | Yes | None |
+| ChatGPT | Yes | Yes | Developer mode must be enabled. |
+| Codex | Yes | Yes | None |
+| Other MCP clients | No | Yes, if the client supports Streamable HTTP with OAuth | Untested. Follow your client's own documentation. |
 
-Every client needs Streamable HTTP support and OAuth to connect. Testing status is stated only where it has been confirmed: the clients marked as having dedicated instructions have documented setup paths, which is not the same as every path in this document having been verified end to end. Paths still pending verification are marked with a `[TODO — …]` note where they appear.
+Every client needs Streamable HTTP support and OAuth to connect.
+
+**Tested** means the setup steps in this document have been run on that client and the spreadsheet agent confirmed working end to end. **No** means untested rather than incompatible: Any client that supports Streamable HTTP with OAuth should be able to connect, but you will need to work out the setup details from your client's own documentation.
 
 ## Autosheet limitations
 
@@ -282,7 +280,7 @@ The spreadsheet agent cannot currently:
 
 **Stopping work in progress.** Ask your client to stop the agent. Anything already written to the spreadsheet stays there. To get back to an earlier state, use Google Sheets version history. For more information, see [Important behavior and safe use](#important-behavior-and-safe-use).
 
-**Problems with your client itself.** If a client will not add a custom connector, will not read its configuration file, or does not offer the setup screens described here, that is a client-side problem rather than an Autosheet problem. Check your client's own documentation.
+**Problems with your client itself.** If your client will not add the connector or plugin, does not pick up its configuration file, does not recognize a command, or does not show the setup screens described here, that is a client-side problem rather than an Autosheet problem. Client interfaces change, so yours may differ from what is described here. Check your client's own documentation.
 
 **Support and policies.**
 
@@ -313,8 +311,6 @@ This repository is the canonical documentation for Autosheet MCP.
 You do not need anything from this repository to use Autosheet MCP. Connecting a client directly to `https://mcp.autosheet.com/mcp` is enough, and there is no server for you to install or run.
 
 The MCP server source is not in this public repository and is not open source.
-
-The contents of `plugins/` are promoted from an internal upstream repository on each release. Pull requests that touch `plugins/` are ported upstream rather than merged directly, because the next promotion would otherwise overwrite them.
 
 ## License
 
