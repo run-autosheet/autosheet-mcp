@@ -18,15 +18,13 @@ Use the Autosheet MCP tools to run an agent against a Google Sheets spreadsheet.
 
 1. Collect the following, asking the user only for whatever is missing:
    - The **prompt** (what they want the agent to do)
-   - The **spreadsheet ID or URL** (Google Sheets — full URLs are accepted; the tool extracts the ID, and a tab id in the URL (`#gid=N`) is honored automatically)
+   - The **spreadsheet ID or URL** — Google Sheets spreadsheet ID or full spreadsheet URL. If the URL carries a tab id (`#gid=N`), the agent starts on that tab; a bare ID (or a URL without a `gid`) starts on the first sheet. This is only a starting point — if the prompt names a sheet to work on, the agent uses that one instead.
 
-   If a specific sheet is not already selected by a URL with a `gid`, include its name in the prompt. Otherwise, the agent starts on the first sheet.
-
-2. Call `autosheet_start_agent_google_sheets_spreadsheet` with `prompt` and `spreadsheet_id`. The tool launches the agent and returns the result when it finishes, or a running snapshot for longer jobs.
+2. Call `autosheet_start_agent_google_sheets_spreadsheet` with `prompt` and `spreadsheet_id`. The call waits up to 60 seconds. Short runs complete inside that window and return a summary of work performed along with an `agent_id`; longer runs return early with an `agent_id` and a progress snapshot.
 
 3. For follow-up turns on the same spreadsheet, call `autosheet_follow_up_agent` with the `agent_id` from the previous result and the new `prompt`.
 
-4. If the result is still running, the agent keeps working server-side — don't report it as failed or start a new agent. Call `autosheet_get_agent` with that `agent_id` until `status` is `available`, then present the result.
+4. If a run returns early, call `autosheet_get_agent` with its `agent_id` until `status` is `available`, then present the result.
 
 ## Authentication
 
