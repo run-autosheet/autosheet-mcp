@@ -38,6 +38,8 @@ To use Autosheet MCP you need:
 
 ### Claude
 
+#### Claude personal account
+
 To connect Claude to Autosheet MCP:
 
 1. Open Claude in your browser or in the Claude desktop app.
@@ -54,9 +56,49 @@ To connect Claude to Autosheet MCP:
 
 1. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
+You can now [use Autosheet in Claude](#what-you-can-do).
+
+#### Claude organization account
+
+An organization owner must first make the Autosheet connector available to organization members. Once the connector is available, members can individually authenticate to Autosheet MCP.
+
+##### Add the Autosheet connector to your Claude organization
+
+If you're an organization owner:
+
+1. Open Claude in your browser or in the Claude desktop app.
+
+1. In the main sidebar, click your user name and select **Organization settings**.
+
+1. In the settings sidebar, select **Libraries & Access > Connectors**.
+
+1. Click **Add > All available**.
+
+1. Search for `Autosheet`.
+
+1. Click the **+** button for **Autosheet**.
+
+The Autosheet connector is now available to your organization members.
+
+##### Connect Claude to Autosheet MCP
+
+If you're an organization member:
+
+1. Open Claude in your browser or in the Claude desktop app.
+
+1. In the main sidebar, click your user name and select **Settings**.
+
+1. In the settings sidebar, select **Customize > Connectors**.
+
+1. Click **Connect** for **Autosheet**.
+
+1. Follow the on-screen instructions to authenticate to Autosheet MCP.
+
+You can now [use Autosheet in Claude](#what-you-can-do).
+
 ### Claude Code
 
-> **NOTE!** If you've [installed the Autosheet connector for Claude](#claude), Claude Code is already connected to Autosheet MCP — provided you're signed in to Claude Code with the same Claude user account. If you have not or cannot install the connector in Claude, follow the instructions below.
+> **NOTE!** [If you already have Claude connected to Autosheet MCP](#claude), Claude Code is also connected — provided you're signed in to Claude Code with the same Claude user account. If you cannot or don't want to connect Claude to Autosheet MCP, follow the instructions below for Claude Code.
 
 To connect Claude Code to Autosheet MCP:
 
@@ -76,7 +118,11 @@ To connect Claude Code to Autosheet MCP:
 
 1. Run `/mcp`, select `autosheet`, and select `Authenticate`. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
+You can now [use Autosheet in Claude Code](#what-you-can-do).
+
 ### ChatGPT
+
+#### ChatGPT personal account
 
 > **NOTE!** You connect ChatGPT to Autosheet MCP by configuring a custom plugin. You need to enable developer mode to install and use custom plugins.
 
@@ -88,11 +134,9 @@ To connect ChatGPT to Autosheet MCP:
 
 1. Enable developer mode:
 
-   1. In the settings sidebar, select **Plugins**.
+   1. In the settings sidebar, select **Security and login**.
 
-   1. At the bottom of the panel, select **Developer mode**.
-
-   1. Enable **Developer mode**.
+   1. In the **Developer mode** section, enable **Developer mode**.
 
 1. Install the plugin:
 
@@ -114,9 +158,43 @@ To connect ChatGPT to Autosheet MCP:
 
    1. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
+You can now [use Autosheet in ChatGPT](#what-you-can-do).
+
+#### ChatGPT organization account
+
+A workspace admin or owner must first create and publish a custom app for Autosheet MCP. Once the app is published, workspace members can individually install the app and authenticate to Autosheet MCP.
+
+##### Create the Autosheet app for your ChatGPT workspace
+
+If you're a workspace admin or owner:
+
+1. !! TODO !!
+
+The Autosheet app is now available to your workspace members.
+
+##### Connect ChatGPT to Autosheet MCP
+
+> **NOTE!** In the ChatGPT settings, apps and plugins are both called "plugins".
+
+If you're a workspace member:
+
+1. In the main sidebar, click your user name and select **Settings**.
+
+1. In the settings sidebar, select **Plugins**.
+
+1. At the bottom of the panel, select **Browse plugins**.
+
+1. Search for `Autosheet`.
+
+1. Click the **+** button for **Autosheet**.
+
+1. Follow the on-screen instructions to authenticate to Autosheet MCP.
+
+You can now [use Autosheet in ChatGPT](#what-you-can-do).
+
 ### Codex
 
-To connect Codex to Autosheet MCP for all projects:
+To connect Codex to Autosheet MCP:
 
 1. Open your terminal and run the following command:
 
@@ -126,24 +204,28 @@ To connect Codex to Autosheet MCP for all projects:
 
 1. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
-To connect Codex to Autosheet MCP for a specific project:
+You can now [use Autosheet in Codex](#what-you-can-do), in all projects.
 
-1. Open `<project>/.codex/config.toml` in an editor and add the following configuration:
-
-   ```toml
-   [mcp_servers.autosheet]
-   url = "https://mcp.autosheet.com/mcp"
-   ```
-
-1. Save the file.
-
-1. Open your terminal, change to the project directory, and run the following command:
-
-   ```bash
-   codex mcp login autosheet
-   ```
-
-1. Follow the on-screen instructions to authenticate to Autosheet MCP.
+> **TIP**
+>
+> If you want to enable Autosheet only for a specific project:
+>
+> 1. Open `<project>/.codex/config.toml` in an editor and add the following configuration:
+>
+>    ```toml
+>    [mcp_servers.autosheet]
+>    url = "https://mcp.autosheet.com/mcp"
+>    ```
+>
+> 1. Save the file.
+>
+> 1. Open your terminal, change to the project directory, and run the following command:
+>
+>    ```bash
+>    codex mcp login autosheet
+>    ```
+>
+> 1. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
 ### Other compatible MCP clients
 
@@ -234,9 +316,9 @@ The agent can research on the web when the work needs information that is not al
 
 | Client | Tested | Direct connection | Restrictions to know |
 | --- | --- | --- | --- |
-| Claude | Yes | Yes | None |
+| Claude | Yes | Yes | Organization accounts: An owner must first make the connector available. |
 | Claude Code | Yes | Yes | None |
-| ChatGPT | Yes | Yes | Developer mode must be enabled. |
+| ChatGPT | Yes | Yes | Developer mode must be enabled. Organization accounts: An admin or owner must first make an Autosheet app available. |
 | Codex | Yes | Yes | None |
 | Other MCP clients | No | Yes, if the client supports Streamable HTTP with OAuth | Untested. Follow your client's own documentation. |
 
