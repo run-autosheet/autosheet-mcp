@@ -9,7 +9,7 @@ description: >-
   URL. Triggers include "add a column with sentiment", "categorize my leads",
   "translate column B", "validate these emails", "analyze the feedback in my
   sheet". Do NOT use for local .xlsx/.csv files the user wants edited on disk.
-argument-hint: "<prompt> on <spreadsheet_id_or_url> (sheet: <sheet_name>)"
+argument-hint: "<prompt> on <spreadsheet_id_or_url>"
 ---
 
 Use the Autosheet MCP tools to run an agent against a Google Sheets spreadsheet.
@@ -19,13 +19,14 @@ Use the Autosheet MCP tools to run an agent against a Google Sheets spreadsheet.
 1. Collect the following, asking the user only for whatever is missing:
    - The **prompt** (what they want the agent to do)
    - The **spreadsheet ID or URL** (Google Sheets — full URLs are accepted; the tool extracts the ID, and a tab id in the URL (`#gid=N`) is honored automatically)
-   - The **sheet name** — only needed when the spreadsheet input doesn't already pinpoint the tab: a URL with a `gid` targets that tab, and otherwise the agent defaults to the first sheet. Don't ask for it unless the user's request is ambiguous about which tab to use.
 
-2. Call `autosheet_run` with these parameters. The tool launches the agent, polls until it finishes (default 600s, max 600s via `timeout_seconds`), and returns the formatted result. It returns as soon as the agent finishes, so the high default is free for short jobs and lets long, multi-step jobs (translations, bulk categorization over many rows) complete in one call.
+   If a specific sheet is not already selected by a URL with a `gid`, include its name in the prompt. Otherwise, the agent starts on the first sheet.
 
-3. For follow-up turns on the same spreadsheet, pass the `agent_id` from the previous result back into `autosheet_run` along with the new `prompt` (and `sheet_name` or `sheet_id` if the turn targets a different tab).
+2. Call `autosheet_start_agent_google_sheets_spreadsheet` with `prompt` and `spreadsheet_id`. The tool launches the agent and returns the result when it finishes, or a running snapshot for longer jobs.
 
-4. If a job is so long that it still exceeds the wait, the agent keeps running server-side — don't report it as failed. The timeout error includes the agent ID (`Timed out waiting for agent <id>`); call `autosheet_status` with that `agent_id` to poll until `status` is `idle`, then present the result.
+3. For follow-up turns on the same spreadsheet, call `autosheet_follow_up_agent` with the `agent_id` from the previous result and the new `prompt`.
+
+4. If the result is still running, the agent keeps working server-side — don't report it as failed or start a new agent. Call `autosheet_get_agent` with that `agent_id` until `status` is `available`, then present the result.
 
 ## Authentication
 
@@ -41,6 +42,7 @@ The Autosheet MCP server uses OAuth (scopes: `mcp:agents:run`, `mcp:agents:read`
 
 | Tool | Inputs | Purpose |
 |------|--------|---------|
-| `autosheet_run` | `prompt`, `spreadsheet_id`, `sheet_name?`, `sheet_id?`, `agent_id?`, `timeout_seconds?` (default 600, max 600) | Start a new agent or continue an existing one and wait for completion |
-| `autosheet_status` | `agent_id` | Fetch latest status, messages, and tool calls for an agent |
-| `autosheet_stop` | `agent_id` | Stop a running agent |
+| `autosheet_start_agent_google_sheets_spreadsheet` | `prompt`, `spreadsheet_id` | Start a new agent |
+| `autosheet_follow_up_agent` | `prompt`, `agent_id` | Continue an existing agent |
+| `autosheet_get_agent` | `agent_id`, `wait_seconds?` (default 25, max 300) | Fetch latest status, messages, and tool calls for an agent |
+| `autosheet_stop_agent` | `agent_id` | Stop a running agent |
