@@ -110,10 +110,10 @@ The agent runs remotely and returns a summary of what it did.
 
 | Tool | Purpose |
 |------|---------|
-| `autosheet_start_agent_google_sheets_spreadsheet` | Launch an AI agent on a Google Sheets spreadsheet |
-| `autosheet_follow_up_agent` | Continue an existing agent with a follow-up prompt |
-| `autosheet_get_agent` | Check the progress of a running agent |
-| `autosheet_stop_agent` | Cancel a running agent |
+| `autosheet_start_agent_google_sheets_spreadsheet` | Start an autonomous agent that operates on a Google Sheets spreadsheet based on a natural-language prompt |
+| `autosheet_follow_up_agent` | Send a follow-up prompt to an existing agent, which retains full memory of its previous work |
+| `autosheet_get_agent` | Fetch the current status and last-turn messages for an agent |
+| `autosheet_stop_agent` | Stop a running agent |
 
 ## Issues
 
