@@ -1,20 +1,35 @@
 # Autosheet MCP
 
-Autosheet MCP is a hosted remote MCP server. It lets compatible MCP clients run the **Autosheet spreadsheet agent** directly in your existing Google Sheets spreadsheets. You describe the work in plain language, and the agent carries it out in the spreadsheet.
+Autosheet MCP is the hosted remote MCP server for [**Autosheet**](https://autosheet.com/), an AI agent for Google Sheets. The server lets compatible MCP clients run the agent directly in your existing spreadsheets.
 
-You do not install or run a server. Autosheet MCP is hosted by Autosheet at a single address:
+The server is hosted at:
 
 ```text
 https://mcp.autosheet.com/mcp
 ```
 
-Autosheet MCP uses stateless Streamable HTTP transport. Access is authenticated with OAuth. The first time your client calls an Autosheet tool, it opens your browser so you can sign in. Clients can list the available tools before signing in; running one requires sign-in.
+You set up Autosheet MCP by connecting directly to the hosted server. This works in every client covered below and gives you the [full set of Autosheet MCP tools](#mcp-tools).
 
-You set up Autosheet MCP by connecting directly to the hosted server. This works in every client covered below and gives you the [full set of Autosheet tools](#tool-reference).
+Dedicated setup instructions are provided for [Claude](#claude), [Claude Code CLI](#claude-code-cli), [ChatGPT](#chatgpt), and [Codex CLI](#codex-cli). You can also use [any other MCP client](#other-compatible-mcp-clients) that supports remote servers over Streamable HTTP with OAuth.
 
-Dedicated setup instructions are provided for [Claude](#claude), [Claude Code](#claude-code), [ChatGPT](#chatgpt), and [Codex](#codex). You can also use [any other MCP client](#other-compatible-mcp-clients) that supports remote servers over Streamable HTTP with OAuth.
+## MCP tools
 
-For more about the product, see [autosheet.com](https://autosheet.com/).
+| Tool | What it does | Inputs |
+| --- | --- | --- |
+| `autosheet_start_agent_google_sheets_spreadsheet` | Starts a new Autosheet agent on a Google Sheets spreadsheet with your instruction. | `prompt`, `spreadsheet_id` |
+| `autosheet_follow_up_agent` | Continues an existing agent conversation with a new instruction. | `prompt`, `agent_id` |
+| `autosheet_get_agent` | Reports whether an agent is available or busy, and returns its last-turn messages. | `agent_id`, `wait_seconds` |
+| `autosheet_stop_agent` | Stops an agent that is still running. | `agent_id` |
+
+Notes on the inputs:
+
+- `spreadsheet_id` accepts either a bare Google Sheets ID or a full spreadsheet URL. A tab ID in the URL sets the sheet the agent starts on.
+
+- `agent_id` identifies an agent that is already running. Your client takes it from the previous result, so you do not need to handle it yourself.
+
+- `wait_seconds` is optional and controls how long a status check waits for the agent before answering, from 0 to 50 seconds. It defaults to 25, which lets your client pace its own polling without sleeping between calls.
+
+- A follow-up takes no spreadsheet input. It continues on the agent's existing spreadsheet, which is why it cannot be redirected to a different spreadsheet. If you want to work on another spreadsheet, start a new agent.
 
 ## Get started
 
@@ -22,27 +37,31 @@ For more about the product, see [autosheet.com](https://autosheet.com/).
 
 To use Autosheet MCP you need:
 
-- A GPT for Work account.
+- **A GPT for Work account with available usage or credits.** You sign in to the GPT for Work account with your Google account. If you do not have a GPT for Work account, the sign-in process automatically creates a free-trial account for you. Once the free trial has ended, [upgrade to a paid plan](https://gptforwork.com/docs/admin/billing/subscription/manage-your-plan) to continue using Autosheet.
 
-- Membership of a [GPT for Work space](https://gptforwork.com/docs/resources/guides/concepts#space) that has usage or credits available.
+- **Edit access to the Google Sheets spreadsheets you want Autosheet to work on.** Autosheet accesses spreadsheets through your Google account, so it can only reach spreadsheets that your account is allowed to edit. Make sure you sign in with a Google account that has edit access to the spreadsheets you want to work on.
 
-- Edit access to the Google Sheets spreadsheets you want the agent to work on.
+**Signing in.** Your client authenticates to Autosheet MCP with OAuth. Autosheet opens a browser window for Google sign-in when authentication is required, for example, on the first tool call. Your client stores the authentication credentials and reuses them for subsequent tool calls.
 
-**Signing in.** Your client authenticates to Autosheet MCP with OAuth. The first Autosheet tool call opens a browser window for sign-in. After that, your client stores the credentials and reuses them. Separately, the agent works on spreadsheets through your Google account, so it can only reach spreadsheets that your account is allowed to edit.
-
-**Approving tool calls.** MCP clients ask you to approve tool calls before they run. Where that prompt appears, how it is worded, and whether you can pre-approve a tool all vary by client. The tools that start work declare themselves as making changes, so clients that act on that will prompt you before the agent touches a spreadsheet; checking status is declared read-only and is usually not prompted. Keep approval required for the tools that make changes rather than allowing them automatically. For more information, see [Important behavior and safe use](#important-behavior-and-safe-use).
-
-**Telling the agent which spreadsheet to use.** Give the agent either the full Google Sheets URL or the bare spreadsheet ID. In a URL, the ID is the part between `/d/` and `/edit`. For example, in the URL `https://docs.google.com/spreadsheets/d/1etZyGGQPami0R9D2W6WlJMWbrd_JvStLDdsteFegnko/edit`, the ID is `1etZyGGQPami0R9D2W6WlJMWbrd_JvStLDdsteFegnko`.
-
-**Telling the agent which sheet to work on.** Copy the URL while the sheet you want is open. A Google Sheets URL carries a tab id, such as `#gid=123456`, and the agent starts on that sheet. A bare spreadsheet ID, or a URL without a tab id, starts the agent on the first sheet. Either way, naming a sheet in your instruction takes precedence — for example, "clean up the emails on the Contacts sheet". The agent can explore the spreadsheet and move between sheets as the work requires, so the starting sheet is a starting point rather than a boundary.
+> **TIP**
+>
+> The sign-in process creates an Autosheet API key. Autosheet MCP uses the key to identify you to Autosheet, so that the agent can work on the spreadsheets your connected Google account can edit. You can manage the key in the [GPT for Work dashboard](https://dashboard.gptforwork.com/).
 
 ### Claude
+
+Follow the instructions for your Claude account type:
+
+- [Personal account](#claude-personal-account) — If you're on the Free, Pro, or Max plan, you have a personal account.
+
+- [Organization account](#claude-organization-account) — If you're part of a team, you have an organization account.
 
 #### Claude personal account
 
 To connect Claude to Autosheet MCP:
 
 1. Open Claude in your browser or in the Claude desktop app.
+
+   If you're in the browser, you can go directly to the [Autosheet connector's directory listing](https://claude.ai/directory/connectors/autosheet) and continue from step 7.
 
 1. In the main sidebar, click your user name and select **Settings**.
 
@@ -54,9 +73,15 @@ To connect Claude to Autosheet MCP:
 
 1. Click the **+** button for **Autosheet**.
 
+   ![Add the Autosheet connector to Claude](docs/images/claude-connectors-autosheet-select.png)
+
+1. Click **Connect**.
+
+   ![Connect Claude to Autosheet MCP](docs/images/claude-connectors-autosheet-connect.png)
+
 1. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
-You can now [use Autosheet in Claude](#what-you-can-do).
+You can now [use Autosheet in Claude](#using-autosheet).
 
 #### Claude organization account
 
@@ -78,6 +103,20 @@ If you're an organization owner:
 
 1. Click the **+** button for **Autosheet**.
 
+   ![Add the Autosheet connector to Claude](docs/images/claude-connectors-autosheet-select.png)
+
+1. Click **Add to your team**.
+
+   ![Connect Claude to Autosheet MCP](docs/images/claude-connectors-autosheet-team-add.png)
+
+1. (Optional) To modify the tool permission restrictions for your organization:
+
+   1. Select the **Configuration** tab and click **Connect**.
+
+   1. Follow the on-screen instructions to authenticate to Autosheet MCP.
+
+   1. Check the permission restrictions and adjust them as needed.
+
 The Autosheet connector is now available to your organization members.
 
 ##### Connect Claude to Autosheet MCP
@@ -86,21 +125,33 @@ If you're an organization member:
 
 1. Open Claude in your browser or in the Claude desktop app.
 
+   If you're in the browser, you can go directly to the [Autosheet connector's directory listing](https://claude.ai/directory/connectors/autosheet), click **Connect**, and continue from step 5.
+
 1. In the main sidebar, click your user name and select **Settings**.
 
 1. In the settings sidebar, select **Customize > Connectors**.
 
 1. Click **Connect** for **Autosheet**.
 
+   ![Connect Claude to Autosheet MCP](docs/images/claude-connectors-autosheet-team-connect.png)
+
 1. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
-You can now [use Autosheet in Claude](#what-you-can-do).
+1. (Optional) To modify the tool permissions:
 
-### Claude Code
+   1. In the connectors list, select **Autosheet**.
 
-> **NOTE!** [If you already have Claude connected to Autosheet MCP](#claude), Claude Code is also connected — provided you're signed in to Claude Code with the same Claude user account. If you cannot or don't want to connect Claude to Autosheet MCP, follow the instructions below for Claude Code.
+   1. In the **Tool permissions** section, check the permissions and adjust them as needed.
 
-To connect Claude Code to Autosheet MCP:
+You can now [use Autosheet in Claude](#using-autosheet).
+
+### Claude Code CLI
+
+> **NOTE**
+>
+> [If you already have Claude connected to Autosheet MCP](#claude), the Claude Code CLI is also connected — provided you're signed in to the CLI with the same Claude user account. If you cannot or don't want to connect Claude to Autosheet MCP, follow the instructions below for the CLI.
+
+To connect the Claude Code CLI to Autosheet MCP:
 
 1. Open your terminal and run the following command:
 
@@ -114,17 +165,31 @@ To connect Claude Code to Autosheet MCP:
    claude mcp add --transport http autosheet https://mcp.autosheet.com/mcp --scope user
    ```
 
-1. Start a new Claude Code session.
+1. Start a new Claude Code CLI session.
 
 1. Run `/mcp`, select `autosheet`, and select `Authenticate`. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
-You can now [use Autosheet in Claude Code](#what-you-can-do).
+You can now [use Autosheet in the Claude Code CLI](#using-autosheet).
 
 ### ChatGPT
 
+Follow the instructions for your ChatGPT account type:
+
+- [Personal account](#chatgpt-personal-account) — If you're on the Plus or Pro plan, you have a personal account.
+
+  > **NOTE**
+  >
+  > You cannot currently use Autosheet with the Free or Go plan.
+
+- [Organization account](#chatgpt-organization-account) — If you're part of a team workspace, you have an organization account.
+
 #### ChatGPT personal account
 
-> **NOTE!** You connect ChatGPT to Autosheet MCP by configuring a custom plugin. You need to enable developer mode to install and use custom plugins.
+You connect ChatGPT to Autosheet MCP by configuring a custom plugin. You need to enable developer mode to install and use custom plugins.
+
+> **NOTE**
+>
+> The Free and Go plans do not support developer mode, so you cannot currently use Autosheet with them.
 
 To connect ChatGPT to Autosheet MCP:
 
@@ -158,7 +223,7 @@ To connect ChatGPT to Autosheet MCP:
 
    1. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
-You can now [use Autosheet in ChatGPT](#what-you-can-do).
+You can now [use Autosheet in ChatGPT](#using-autosheet).
 
 #### ChatGPT organization account
 
@@ -174,7 +239,9 @@ The Autosheet app is now available to your workspace members.
 
 ##### Connect ChatGPT to Autosheet MCP
 
-> **NOTE!** In the ChatGPT settings, apps and plugins are both called "plugins".
+> **NOTE**
+>
+> In the ChatGPT settings, apps and plugins are both called "plugins".
 
 If you're a workspace member:
 
@@ -190,11 +257,11 @@ If you're a workspace member:
 
 1. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
-You can now [use Autosheet in ChatGPT](#what-you-can-do).
+You can now [use Autosheet in ChatGPT](#using-autosheet).
 
-### Codex
+### Codex CLI
 
-To connect Codex to Autosheet MCP:
+To connect the Codex CLI to Autosheet MCP:
 
 1. Open your terminal and run the following command:
 
@@ -204,7 +271,7 @@ To connect Codex to Autosheet MCP:
 
 1. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
-You can now [use Autosheet in Codex](#what-you-can-do), in all projects.
+You can now [use Autosheet in the Codex CLI](#using-autosheet), in all projects.
 
 > **TIP**
 >
@@ -229,97 +296,109 @@ You can now [use Autosheet in Codex](#what-you-can-do), in all projects.
 
 ### Other compatible MCP clients
 
-Any MCP client that supports remote servers over Streamable HTTP with OAuth can connect to Autosheet MCP. Point it at `https://mcp.autosheet.com/mcp` and complete the browser sign-in when the client prompts you.
+Any MCP client that supports remote servers over stateless Streamable HTTP with OAuth can connect to Autosheet MCP. Point it at `https://mcp.autosheet.com/mcp` and complete the browser sign-in when the client prompts you.
 
-Clients other than the ones above have not been tested with Autosheet MCP. Configuration keys, transport names, and sign-in commands differ between clients, so follow your client's own documentation for the setup steps.
+Clients other than the ones above have not been tested with Autosheet MCP. Configuration keys, transport names, sign-in commands, and tool permission settings differ between clients, so follow your client's own documentation for the setup steps.
 
-## How Autosheet MCP works
+## Using Autosheet
 
-You describe the work you want done in plain language. Your MCP client passes that instruction, along with the spreadsheet you identified, to Autosheet MCP. The spreadsheet agent runs on Autosheet's servers, works through the spreadsheet, and reports back a summary of what it did.
+To work on a spreadsheet in Claude, ChatGPT, or another MCP client, start with a prompt where you:
 
-**Starting work.** When you ask for spreadsheet work, your client calls the start tool with your instruction and the spreadsheet. The agent begins working in the spreadsheet.
+- **Identify which spreadsheet you want to work on.** Provide either the full Google Sheets URL or the bare spreadsheet ID. In a URL, the ID is the part between `/d/` and `/edit`: `https://docs.google.com/spreadsheets/d/<spreadsheet-id>/edit`.
+
+- **Optionally identify which sheet or sheets you want to work on.** You can reference both existing sheets and new sheets you want created, by name. Alternatively, for an existing sheet, you can also provide the full Google Sheets URL with the sheet ID included. Copy the URL while the sheet you want is open — the URL looks like `https://docs.google.com/spreadsheets/d/<spreadsheet-id>/edit?gid=<sheet-id>#gid=<sheet-id>`. If you do not identify any sheet, the agent starts working on the first sheet in the spreadsheet. The agent can explore the spreadsheet and move between sheets as the work requires, so the starting sheet is a starting point rather than a boundary.
+
+- **Describe the work you want done in plain language.**
+
+Example prompt:
+
+```text
+Here's my spreadsheet:
+https://docs.google.com/spreadsheets/d/<spreadsheet-id>/edit?gid=<sheet-id>#gid=<sheet-id>
+
+On the Q3 Pipeline sheet, add a "Risk" column. Flag a deal High if its close date has
+passed and it's still in Negotiation, Medium if the close date is within 14 days and
+there's no logged activity, and Low otherwise. Add a one-line reason for each flag.
+```
+
+### How Autosheet MCP works
+
+Your client passes the instruction, along with the spreadsheet and optionally sheets you identified, to Autosheet MCP. The spreadsheet agent runs on Autosheet's servers, works through the spreadsheet, and reports back a summary of what it did.
+
+**Starting work.** When you ask for spreadsheet work, your client calls the start tool with your instruction and the spreadsheet. The agent begins working in the spreadsheet. Every start creates a fresh agent with no memory of earlier runs or of your conversation, so the instruction needs to stand on its own.
 
 **Following up.** After the agent reports back, you can keep going in the same conversation. Your client calls the follow-up tool, which continues with the same agent rather than starting a new one. Use this for corrections and for work that builds on what the agent just did.
 
-**Long runs.** Short jobs finish inside the first call and come straight back. Longer jobs do not hold the call open: it returns quickly with a progress snapshot, and the agent carries on working on Autosheet's servers. **A snapshot is not a failure.** Your client then polls the status tool until the agent is idle and collects the result. The status tool waits a short while for the agent before answering, so polling costs few calls. If your client reports work as failed or starts a second agent for the same instruction, that is the client mishandling a snapshot — see [Troubleshooting and support](#troubleshooting-and-support).
+**Long runs.** Runs take anywhere from a few seconds to several minutes, and the same instruction may produce different results on different runs. Short jobs finish inside the first call and come straight back. Longer jobs do not hold the call open: it returns quickly with a progress snapshot, and the agent carries on working on Autosheet's servers. **A snapshot is not a failure.** Your client then polls the status tool until the agent is available and collects the result. The status tool waits a short while for the agent before answering, so polling costs few calls. If your client reports work as failed or starts a second agent for the same instruction, that is the client mishandling a snapshot — see [Troubleshooting and support](#troubleshooting-and-support).
 
 **Stopping.** If the agent is doing the wrong thing, ask your client to stop it. Work already written to the spreadsheet stays there. See [Important behavior and safe use](#important-behavior-and-safe-use).
 
 Clients display all of this differently. Tool names, approval prompts, and progress reporting vary, so what you see depends on the client you use.
 
-### Tool reference
+### What you can do
 
-| Tool | Title | What it does | Inputs |
-| --- | --- | --- | --- |
-| `autosheet_start_agent` | Start an Autosheet agent | Starts a new agent on a spreadsheet with your instruction. | `prompt`, `spreadsheet_id` |
-| `autosheet_follow_up_agent` | Follow up with an Autosheet agent | Continues an existing agent conversation with a new instruction. | `prompt`, `agent_id` |
-| `autosheet_get_agent` | Get the status of an Autosheet agent | Reports the current status, messages, and progress of an agent. | `agent_id` |
-| `autosheet_stop_agent` | Stop an Autosheet agent | Stops an agent that is still running. | `agent_id` |
-
-Notes on the inputs:
-
-- `spreadsheet_id` accepts either a bare Google Sheets ID or a full spreadsheet URL. A tab id in the URL sets the sheet the agent starts on.
-
-- `agent_id` identifies an agent that is already running. Your client takes it from the previous result — you do not need to handle it yourself.
-
-- A follow-up takes no spreadsheet input. It continues on the agent's own spreadsheet and current sheet, which is why it cannot be redirected to a different spreadsheet. If you want to work on a new spreadsheet, start a new agent.
-
-## What you can do
-
-Autosheet handles most of the work you would otherwise do by hand in your spreadsheet. The agent explores the spreadsheet and its sheets, plans the work, does it, checks its own results, and corrects its mistakes.
+Autosheet handles most of the work you would otherwise do by hand in your spreadsheet. The agent explores the spreadsheet and its sheets, plans the work, does it, checks its own results, and corrects its mistakes. The agent can research on the web when the work needs information that is not already in the spreadsheet. The agent reports a summary of what it did rather than the cell contents themselves. If you want to see specific values or formulas, ask for them explicitly. If the agent gets stuck, steering it with a more specific instruction usually works better than repeating the original one. For work it cannot do, see [Autosheet limitations](#autosheet-limitations).
 
 **Everyday spreadsheet work** — formulas, structure, analysis, and formatting:
 
-- "Write a formula in column F that flags any order over 30 days old and still unpaid."
+```text
+In <spreadsheet-url>, add a column to the Invoices sheet that flags anything still unpaid more than 30 days after the invoice date, and total the flagged amounts at the bottom.
+```
 
-- "Explain what the formula in G2 does and why it returns an error."
+```text
+The formula in G2 of <spreadsheet-url> returns #REF!. Explain what it's trying to do, then fix it.
+```
 
-- "Clean up the company names in column B and remove the duplicate rows."
+```text
+In <spreadsheet-url>, build a summary of revenue by region and quarter with a chart, on a new sheet called Dashboard.
+```
 
-- "Validate every email address in column A and flag the bad ones in column D."
+```text
+The Export sheet in <spreadsheet-url> has one row per line item. Restructure it into one row per order on a new sheet, with the line items summarized in a single column.
+```
 
-- "Build a pivot table of revenue by region and quarter on a new sheet."
-
-- "Add conditional formatting so anything below target turns red."
-
-- "Merge the two contact sheets and reconcile the duplicates."
+```text
+In <spreadsheet-url>, format the Budget sheet so headers are bold with a frozen top row, currency columns show two decimals, and anything over budget is highlighted red.
+```
 
 **Bulk processing, row by row** — the agent works out its own approach and applies it across the whole range:
 
-- "Score every lead in this spreadsheet against our scoring rules and put the score in column H."
+```text
+In <spreadsheet-url>, go through every product in the Catalog sheet and add two columns: a category from our taxonomy — Apparel, Footwear, Accessories, Home — and a one-sentence description written for a product listing page.
+```
 
-- "Categorize each support ticket by topic and add the category in a new column."
+```text
+Translate the product descriptions in column D of <spreadsheet-url> into German and French, each into its own new column. Keep brand names in English and stay under 160 characters.
+```
 
-- "For every company in column A, look up the CEO and the headcount and fill them in."
+```text
+For every company in column A of <spreadsheet-url>, research and fill in the industry, employee count, and headquarters country. Then score each one 1–5 on fit for a product that sells to mid-market logistics teams, and put the score in column F.
+```
 
-- "Translate the product descriptions in column C into German."
-
-- "Work through the responses sheet and tag each row with a sentiment."
-
-The agent can research on the web when the work needs information that is not already in the spreadsheet. For work it cannot do, see [Autosheet limitations](#autosheet-limitations).
+```text
+The Contacts sheet in <spreadsheet-url> was merged from three sources. Standardize the company names and job titles, flag likely duplicate people in a new column, and normalize all phone numbers to E.164 format.
+```
 
 ## Important behavior and safe use
 
-**The agent works directly in your spreadsheet.** It can add, overwrite, move, and clear content. It is not working on a copy.
+**Approving tool calls.** MCP clients ask you to approve tool calls before they run. Where that prompt appears, how it is worded, and whether you can pre-approve a tool all vary by client. The tools that start work declare themselves as making changes, so clients that act on that will prompt you before the agent touches a spreadsheet.
+
+**The agent works directly in your spreadsheet.** It is not working on a copy. Read-only work and bulk row-by-row processing cannot overwrite existing data. Other write operations can add, overwrite, move, or clear content.
 
 **The agent applies changes by default.** It does not propose a plan and wait for you to accept it. If you want to see the intended approach before anything is written, ask for it explicitly — for example, "plan this first and show me before you change anything". For bulk work, you can ask the agent to do a few rows first so you can check the result before it processes the rest.
 
 **Permissions matter.** The agent works through your Google account and can change anything that account can edit in the spreadsheets you point it at. Check that you are pointing it at the right spreadsheet before you start, particularly with a shared spreadsheet where other people depend on the data.
 
-**Keep write approval on.** MCP clients let you approve tool calls before they run, and some let you pre-approve a tool so it runs without asking. Leave approval required for the Autosheet start and follow-up tools. The approval prompt is the point where you can see which spreadsheet is about to be changed and stop a request that names the wrong one.
-
 **Recovering earlier content.** You can review or restore earlier versions of a spreadsheet using Google Sheets version history. Restoring an earlier version also reverts other changes made to the spreadsheet since that version, including changes made by other people. For more information, see [Find what's changed in a file](https://support.google.com/docs/answer/190843) (Google Docs Editors Help).
-
-**Check the server address.** The only official Autosheet MCP server address is `https://mcp.autosheet.com/mcp`. If you are asked to add an Autosheet connector at a different address, do not add it.
 
 ## Platforms and compatibility
 
 | Client | Tested | Direct connection | Restrictions to know |
 | --- | --- | --- | --- |
 | Claude | Yes | Yes | Organization accounts: An owner must first make the connector available. |
-| Claude Code | Yes | Yes | None |
+| Claude Code CLI | Yes | Yes | None |
 | ChatGPT | Yes | Yes | Developer mode must be enabled. Organization accounts: An admin or owner must first make an Autosheet app available. |
-| Codex | Yes | Yes | None |
+| Codex CLI | Yes | Yes | None |
 | Other MCP clients | No | Yes, if the client supports Streamable HTTP with OAuth | Untested. Follow your client's own documentation. |
 
 Every client needs Streamable HTTP support and OAuth to connect.
@@ -332,27 +411,34 @@ Autosheet works with existing Google Sheets spreadsheets only. It does not work 
 
 The spreadsheet agent cannot currently:
 
-- See a spreadsheet visually or use color-based logic
+- Use existing cell colors as input criteria
+- Scrape specific URLs, although it can search the web
+- Analyze images
+- Show its sources for bulk web search
 - Record or run a macro
 - Run Apps Script or other add-ons
-- Convert or download a spreadsheet to other formats
-- Make copies of a spreadsheet or create new files
+- Export, download, convert, or copy spreadsheet files
+- Create new files
 
 ## Troubleshooting and support
 
-**Sign-in fails, or the client says Autosheet needs authentication.** Run your client's sign-in step rather than retrying the spreadsheet request: `/mcp` in Claude Code, `codex mcp login autosheet` in Codex. In Claude and ChatGPT, the browser sign-in starts from the first tool call. If sign-in succeeds but the client still reports a problem, start a new session or chat and try again.
+**Sign-in fails, or the client says Autosheet needs authentication.** Run your client's sign-in step rather than retrying the spreadsheet request: `/mcp` in the Claude Code CLI, `codex mcp login autosheet` in your terminal. In Claude and ChatGPT, the browser sign-in starts from the first tool call. If sign-in succeeds but the client still reports a problem, start a new session or chat and try again.
 
-**Browser sign-in in a terminal, a remote session, or a headless environment.** Sign-in needs a browser on the machine running the client. In Codex, `mcp_oauth_callback_port` and `mcp_oauth_callback_url` let you control the callback so it can reach a remote machine.
+**Browser sign-in in a terminal, a remote session, or a headless environment.** Sign-in needs a browser on the machine running the client. In the Codex CLI, `mcp_oauth_callback_port` and `mcp_oauth_callback_url` let you control the callback so it can reach a remote machine.
 
 **Claude cannot reach the server, but your network can.** Remote connectors are brokered from Anthropic's servers, not from your machine. This is true in Claude Desktop and in Cowork as well. A firewall rule or VPN on your own machine is therefore not the cause, and allowing the address locally will not change the result.
 
 **The agent cannot open the spreadsheet.** Check that the Google account you signed in with has edit access to that spreadsheet, and that the spreadsheet has not been moved or deleted.
+
+**Every tool call fails with a Google connection error.** Connecting your client succeeds even when your Autosheet API key has no Google account attached, so the problem only shows up on the first tool call. Connect Google in the [GPT for Work dashboard](https://dashboard.gptforwork.com/), then try again.
 
 **The spreadsheet URL or ID is rejected.** Supply either the full Google Sheets URL or the bare ID. In a URL such as `https://docs.google.com/spreadsheets/d/1etZyGGQPami0R9D2W6WlJMWbrd_JvStLDdsteFegnko/edit`, the ID is the part between `/d/` and `/edit`. Links from other Google products, and shortened links, may not contain the ID.
 
 **The agent worked on the wrong sheet.** Name the sheet in your instruction — that takes precedence over everything else. Otherwise the agent starts on the sheet identified by the tab ID in the URL you supplied, or on the first sheet if you supplied a bare spreadsheet ID or a URL without one. Copying the URL while the sheet you want is open is the simplest way to get this right.
 
 **A follow-up went to the wrong spreadsheet.** A follow-up always continues on the agent's own spreadsheet and cannot be pointed at a different one. Start a new agent instead.
+
+**A follow-up fails and says the agent has expired.** Agents are kept for a limited time after their last turn. Once an agent expires, follow-ups to it stop working. Start a new agent, and include any context the new agent needs — it has no memory of the earlier run.
 
 **Work is taking a long time.** Longer jobs return a progress snapshot rather than holding the call open, and the agent keeps running on Autosheet's servers. This is normal and is not a failure. Ask your client to check the agent's status rather than repeating the instruction — repeating it starts a second agent on the same spreadsheet, and the two will collide.
 
