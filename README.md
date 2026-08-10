@@ -366,9 +366,7 @@ Example prompt:
 Here's my spreadsheet:
 https://docs.google.com/spreadsheets/d/<spreadsheet-id>/edit?gid=<sheet-id>#gid=<sheet-id>
 
-On the Q3 Pipeline sheet, add a "Risk" column. Flag a deal High if its close date has
-passed and it's still in Negotiation, Medium if the close date is within 14 days and
-there's no logged activity, and Low otherwise. Add a one-line reason for each flag.
+On the Q3 Pipeline sheet, add a "Risk" column. Flag a deal High if its close date has passed and it's still in Negotiation, Medium if the close date is within 14 days and there's no logged activity, and Low otherwise. Add a one-line reason for each flag.
 ```
 
 ### How Autosheet MCP works
@@ -381,9 +379,9 @@ Your client passes the instruction, along with the spreadsheet and any sheets yo
 
 **Following up.** After the agent reports back, you can keep going in the same conversation. Your client calls the follow-up tool, which continues with the same agent rather than starting a new one. Use this for corrections and for work that builds on what the agent just did.
 
-**Stopping.** If the agent is doing the wrong thing, ask your client to stop it. Work already written to the spreadsheet stays there. See [Important behavior and safe use](#important-behavior-and-safe-use).
+**Stopping.** If the agent is doing the wrong thing, ask your client to stop it. Work already written to the spreadsheet stays there. For more information, see [Important behavior and safe use](#important-behavior-and-safe-use).
 
-Tasks take anywhere from a few seconds to several minutes, and the same instruction may produce different results on different runs. Short tasks finish inside the first call and come straight back. Longer tasks do not hold the call open. The call returns quickly with a progress snapshot, and the agent carries on working on Autosheet's servers. **A snapshot is not a failure.** Your client then polls the status tool until the agent is available and collects the result. The status tool waits a short while for the agent before answering, so polling is cheap. If your client reports work as failed or starts a second agent for the same instruction, that is the client mishandling a snapshot — see [Troubleshooting](#troubleshooting).
+Tasks take anywhere from a few seconds to several minutes, and the same instruction may produce different results on different runs. Short tasks finish inside the first call and come straight back. Longer tasks do not hold the call open. The call returns quickly with a progress snapshot, and the agent carries on working on Autosheet's servers. **A snapshot is not a failure.** Your client then polls the status tool until the agent is available and collects the result. The status tool waits a short while for the agent before answering, so polling is cheap. If your client reports work as failed or starts a second agent for the same instruction, that is the client mishandling a snapshot. For more information, see [Troubleshooting](#troubleshooting).
 
 Clients display all of this differently. Tool names, approval prompts, and progress reporting vary, so what you see depends on the client you use.
 
@@ -536,7 +534,7 @@ The spreadsheet agent cannot currently:
 
 - [Contact support](https://support.gptforwork.com/hc/en-us/requests/new)
 
-- [Trust center](https://security.talarian.io) — certifications, security practices, and vulnerability reporting
+- [Trust center](https://security.talarian.io)
 
 - [Security and privacy FAQ](https://gptforwork.com/help/get-started/security-privacy-faq)
 
