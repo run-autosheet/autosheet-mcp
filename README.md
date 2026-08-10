@@ -1,6 +1,6 @@
 # Autosheet MCP
 
-Autosheet MCP is the hosted remote MCP server for [**Autosheet**](https://autosheet.com/), a spreadsheet agent for Google Sheets. The server lets compatible MCP clients run the agent directly in your existing spreadsheets.
+Autosheet MCP is the hosted remote MCP server for [Autosheet](https://autosheet.com/), the spreadsheet agent that powers [GPT for Sheets](https://gptforwork.com/docs/gpt-for-sheets). The server lets compatible MCP clients run the agent directly in your existing spreadsheets.
 
 The server is hosted at:
 
@@ -37,7 +37,7 @@ Notes on the inputs:
 
 To use Autosheet MCP you need:
 
-- **A GPT for Work account with available usage or credits.** You sign in with your Google account. If you do not have a GPT for Work account, the sign-in process automatically creates a free-trial account for you. Once the free trial has ended, [upgrade to a paid plan](https://gptforwork.com/docs/admin/billing/subscription/manage-your-plan) to continue using Autosheet.
+- **A [GPT for Work](https://gptforwork.com/) account with available usage or credits.** You sign in with your Google account. If you do not have a GPT for Work account, the sign-in process automatically creates a free-trial account for you. Once the free trial has ended, [upgrade to a paid plan](https://gptforwork.com/docs/admin/billing/subscription/manage-your-plan) to continue using Autosheet.
 
 - **Edit access to the Google Sheets spreadsheets you want Autosheet to work on.** Autosheet accesses spreadsheets through your Google account, so it can only reach spreadsheets that your account is allowed to edit.
 
@@ -339,7 +339,9 @@ Clients display all of this differently. Tool names, approval prompts, and progr
 
 Autosheet handles most of the work you would otherwise do by hand. The agent explores the spreadsheet, plans the work, does it, checks its own results, and corrects its mistakes. The agent can also research on the web when the work needs information the spreadsheet does not have. For work the agent cannot do, see [Autosheet limitations](#autosheet-limitations).
 
-**Everyday spreadsheet work** — formulas, structure, analysis, and formatting:
+#### Everyday spreadsheet work
+
+Write formulas, detect and fix errors, format cells, clean up tables, create charts and pivot tables, analyze data.
 
 ```text
 In <spreadsheet-url>, add a column to the Invoices sheet that flags anything still unpaid more than 30 days after the invoice date, and total the flagged amounts at the bottom.
@@ -350,21 +352,27 @@ The formula in G2 of <spreadsheet-url> returns #REF!. Explain what it's trying t
 ```
 
 ```text
+In <spreadsheet-url>, format the Budget sheet so headers are bold with a frozen top row, currency columns show two decimals, and anything over budget is highlighted red.
+```
+
+```text
+The Raw Data sheet in <spreadsheet-url> has blank rows, inconsistent date formats, and numbers stored as text. Clean it up, and restructure the result into one row per order on a new sheet.
+```
+
+```text
 In <spreadsheet-url>, build a summary of revenue by region and quarter with a chart, on a new sheet called Dashboard.
 ```
 
 ```text
-The Export sheet in <spreadsheet-url> has one row per line item. Restructure it into one row per order on a new sheet, with the line items summarized in a single column.
+Look at the Sales sheet in <spreadsheet-url> and tell me which regions are trending down over the last four quarters, with a short explanation of what's driving it.
 ```
 
-```text
-In <spreadsheet-url>, format the Budget sheet so headers are bold with a frozen top row, currency columns show two decimals, and anything over budget is highlighted red.
-```
+#### Row-by-row bulk processing
 
-**Bulk processing, row by row** — the agent works out its own approach and applies it across the whole range:
+Clean, translate, categorize, generate, enrich, score, and more, across thousands of rows. For each column the agent fills, it writes one prompt template and uses a subagent to run the template against every row in parallel. This is AI processing per row, not a formula filled down, so it handles work no formula can do: judgment, writing, research, and classification.
 
 ```text
-In <spreadsheet-url>, go through every product in the Catalog sheet and add two columns: a category from our taxonomy — Apparel, Footwear, Accessories, Home — and a one-sentence description written for a product listing page.
+The Contacts sheet in <spreadsheet-url> was merged from three sources. Standardize the company names and job titles, flag likely duplicate people in a new column, and normalize all phone numbers to E.164 format.
 ```
 
 ```text
@@ -372,11 +380,35 @@ Translate the product descriptions in column D of <spreadsheet-url> into German 
 ```
 
 ```text
-For every company in column A of <spreadsheet-url>, research and fill in the industry, employee count, and headquarters country. Then score each one 1–5 on fit for a product that sells to mid-market logistics teams, and put the score in column F.
+Categorize every support ticket in <spreadsheet-url> into one of Billing, Bug, Feature request, or Account access, and put the category in a new column. Flag anything that looks urgent in a second column.
 ```
 
 ```text
-The Contacts sheet in <spreadsheet-url> was merged from three sources. Standardize the company names and job titles, flag likely duplicate people in a new column, and normalize all phone numbers to E.164 format.
+For every product in the Catalog sheet of <spreadsheet-url>, write a one-sentence description for the product listing page, in plain concrete language with no superlatives.
+```
+
+```text
+For every product in <spreadsheet-url>, work out the material, country of origin, and care instructions from the supplier description in column C, and fill them into their own columns.
+```
+
+```text
+For every company in column A of <spreadsheet-url>, research and fill in the industry, employee count, and headquarters country.
+```
+
+```text
+Score every lead in <spreadsheet-url> from 1 to 5 on fit for a product that sells to mid-market logistics teams, using the industry and headcount columns, and add a one-line reason next to each score.
+```
+
+#### Web research
+
+The agent searches the web and cites its sources, the same as any chat agent. This is separate from the [bulk row-by-row web search above](#row-by-row-bulk-processing), which works at scale but does not report sources.
+
+```text
+For each of the five competitors listed in <spreadsheet-url>, find their current entry-level price and add it in a new column, with a source link for each.
+```
+
+```text
+Research current industry benchmarks for SaaS churn and add them to a new Benchmarks sheet in <spreadsheet-url>, with a source for each figure.
 ```
 
 ## Important behavior and safe use
