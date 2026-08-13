@@ -330,6 +330,10 @@ You can now [use Autosheet in the Codex CLI](#using-autosheet).
 >
 > 1. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
+### Cursor
+
+Install the Autosheet plugin from the [Cursor Marketplace](https://cursor.com/marketplace) once it is listed. The MCP server URL is `https://mcp.autosheet.com/mcp`. OAuth runs on the first tool call.
+
 ### Other compatible MCP clients
 
 Any MCP client that supports remote servers over Streamable HTTP with OAuth can connect to Autosheet MCP. Point it at `https://mcp.autosheet.com/mcp` and complete the browser sign-in when the client prompts you.
