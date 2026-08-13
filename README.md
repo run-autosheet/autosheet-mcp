@@ -211,13 +211,7 @@ To connect ChatGPT to Autosheet MCP:
 
       - **Connection**: Select **Server URL** and enter `https://mcp.autosheet.com/mcp`.
 
-      - **Authentication**:
-
-        1. Select **Advanced OAuth settings**.
-
-        1. In the **Registration method** dropdown, select **Dynamic Client Registration (DCR)**.
-
-        1. Leave the other authentication settings to their defaults.
+      - Leave the other settings at their defaults.
 
       - Check **I understand and want to continue**.
 
@@ -259,13 +253,7 @@ If you're a workspace admin or owner:
 
       - **Connection**: Select **Server URL** and enter `https://mcp.autosheet.com/mcp`.
 
-      - **Authentication**:
-
-        1. Select **Advanced OAuth settings**.
-
-        1. In the **Registration method** dropdown, select **Dynamic Client Registration (DCR)**.
-
-        1. Leave the other authentication settings to their defaults.
+      - Leave the other settings at their defaults.
 
       - Check **I understand and want to continue**.
 
@@ -298,8 +286,6 @@ If you're a workspace member:
 1. Open ChatGPT in your browser.
 
 1. In the main sidebar, select **Plugins**.
-
-1. At the bottom of the panel, select **Browse plugins**.
 
 1. Search for `Autosheet`.
 
