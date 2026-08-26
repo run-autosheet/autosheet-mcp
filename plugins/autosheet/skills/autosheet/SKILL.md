@@ -28,7 +28,7 @@ Use the Autosheet MCP tools to run an agent against a Google Sheets spreadsheet.
 
 ## Authentication
 
-The Autosheet MCP server uses OAuth (scopes: `mcp:agents:run`, `mcp:agents:read`, `mcp:agents:stop`). The first time you invoke a tool, Claude Code opens your browser to authorize.
+The Autosheet MCP server uses OAuth (scopes: `mcp:agents:run`, `mcp:agents:read`, `mcp:agents:stop`). The first time you invoke a tool, the client opens your browser to authorize.
 
 ## Examples
 
