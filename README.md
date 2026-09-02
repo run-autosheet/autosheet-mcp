@@ -472,7 +472,7 @@ Research current industry benchmarks for SaaS churn and add them to a new Benchm
 
 ## Important behavior and safe use
 
-**Approving tool calls.** MCP clients ask you to approve tool calls before they run. Where that prompt appears, how it is worded, and whether you can pre-approve a tool all vary by client. The tools that start work declare themselves as making changes, so clients that act on those declarations will prompt you before Autosheet changes a spreadsheet.
+**Approving tool calls.** MCP clients ask you to approve tool calls before they run. Where that prompt appears, how it is worded, and whether you can pre-approve a tool all vary by client. Tools that can modify a spreadsheet declare themselves as making changes, so clients that act on those declarations will prompt you before running them.
 
 **The agent works directly in your spreadsheet.** It does not work on a copy. Read-only work and bulk row-by-row processing cannot overwrite existing data. Other write operations can add, overwrite, move, or clear content.
 
