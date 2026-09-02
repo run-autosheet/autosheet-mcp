@@ -16,18 +16,18 @@ Dedicated setup instructions are provided for [Claude](#claude), [Claude Code CL
 
 ### Spreadsheet agent tools
 
-| Tool | Title | What it does | Inputs |
-| --- | --- | --- | --- |
-| `autosheet_start_agent_google_sheets_spreadsheet` | Start an Autosheet agent in Google Sheets | Starts a new Autosheet agent on a Google Sheets spreadsheet with your instruction. | `prompt`, `spreadsheet_id` |
-| `autosheet_follow_up_agent` | Follow up Autosheet agent | Continues an existing agent conversation with a new instruction. | `prompt`, `agent_id` |
-| `autosheet_get_agent` | Get Autosheet agent | Reports whether an agent is available or busy, and returns its last-turn messages. | `agent_id`; optional: `wait_seconds` |
-| `autosheet_stop_agent` | Stop Autosheet agent | Stops an agent that is still running. | `agent_id` |
+| Tool | What it does | Inputs |
+| --- | --- | --- |
+| `autosheet_start_agent_google_sheets_spreadsheet` | Starts a new Autosheet agent on a Google Sheets spreadsheet with your instruction. | `prompt`, `spreadsheet_id` |
+| `autosheet_follow_up_agent` | Continues an existing agent conversation with a new instruction. | `prompt`, `agent_id` |
+| `autosheet_get_agent` | Reports whether an agent is available or busy, and returns its last-turn messages. | `agent_id`; optional: `wait_seconds` |
+| `autosheet_stop_agent` | Stops an agent that is still running. | `agent_id` |
 
 ### Spreadsheet utilities
 
-| Tool | Title | What it does | Inputs |
-| --- | --- | --- | --- |
-| `autosheet_copy_tab_from_one_spreadsheet_to_another` | Copy a tab within or between Google Sheets spreadsheets | Copies one tab within a spreadsheet or to another spreadsheet without starting an agent. | Required: `source_spreadsheet_id`, `destination_spreadsheet_id`; select the tab with `sheet_id`, `sheet_name`, or `#gid=` in the source URL |
+| Tool | What it does | Inputs |
+| --- | --- | --- |
+| `autosheet_copy_tab_from_one_spreadsheet_to_another` | Copies one sheet within a spreadsheet or to another spreadsheet without starting an agent. | Required: `source_spreadsheet_id`, `destination_spreadsheet_id`; select the sheet with `sheet_id`, `sheet_name`, or `#gid=` in the source URL |
 
 Notes on the inputs:
 
@@ -41,7 +41,7 @@ Notes on the inputs:
 
 - `source_spreadsheet_id` and `destination_spreadsheet_id` each accept either a bare Google Sheets spreadsheet ID or a full spreadsheet URL.
 
-- Select the tab to copy with its numeric `sheet_id`, its exact `sheet_name`, or a `#gid=` in the source URL. Do not provide both `sheet_id` and `sheet_name`. An explicit `sheet_name` takes precedence over `#gid=` in the source URL.
+- Select the sheet to copy with its numeric `sheet_id`, its exact `sheet_name`, or a `#gid=` in the source URL. Do not provide both `sheet_id` and `sheet_name`. An explicit `sheet_name` takes precedence over `#gid=` in the source URL.
 
 ## Get started
 
@@ -49,9 +49,9 @@ Notes on the inputs:
 
 To use Autosheet MCP you need:
 
-- **A [GPT for Work](https://gptforwork.com/) account.** You sign in with your Google account. Available usage or credits are required for agent work, but not for the copy-tab utility. If you do not have a GPT for Work account, the sign-in process automatically creates a free-trial account for you. Once the free trial has ended, [upgrade to a paid plan](https://gptforwork.com/docs/admin/billing/subscription/manage-your-plan) to continue using the spreadsheet agent.
+- **A [GPT for Work](https://gptforwork.com/) account.** You sign in with your Google account. Available usage or credits are required for agent work, but not for the sheet-copy tool. If you do not have a GPT for Work account, the sign-in process automatically creates a free-trial account for you. Once the free trial has ended, [upgrade to a paid plan](https://gptforwork.com/docs/admin/billing/subscription/manage-your-plan) to continue using the spreadsheet agent.
 
-- **Access to the Google Sheets spreadsheets you want Autosheet to work on.** The spreadsheet agent requires edit access. The copy-tab utility requires read access to the source and edit access to the destination. Autosheet accesses spreadsheets through your Google account.
+- **Access to the Google Sheets spreadsheets you want Autosheet to work on.** The spreadsheet agent requires edit access. The sheet-copy tool requires read access to the source and edit access to the destination. Autosheet accesses spreadsheets through your Google account.
 
 **Signing in.** Your client authenticates to Autosheet MCP with OAuth. Autosheet opens a browser window for Google sign-in when authentication is required, typically on the first tool call. Your client stores the authentication credentials and reuses them for subsequent tool calls.
 
@@ -369,7 +369,7 @@ On the Q3 Pipeline sheet, add a "Risk" column. Flag a deal High if its close dat
 
 ### How Autosheet MCP works
 
-The four agent tools follow the lifecycle below. The copy-tab utility returns its result directly. It does not use an `agent_id`, polling, progress snapshots, follow-ups, or stop.
+The four agent tools follow the lifecycle below. The sheet-copy tool returns its result directly. It does not use an `agent_id`, polling, progress snapshots, follow-ups, or stop.
 
 Your client passes the instruction, along with the spreadsheet and any sheets you identified, to Autosheet MCP. The spreadsheet agent runs on Autosheet's servers, works through the spreadsheet, and reports back a summary of what it did.
 
@@ -387,14 +387,14 @@ Clients display all of this differently. Tool names, approval prompts, and progr
 
 ### What you can do
 
-Autosheet combines a spreadsheet agent with a direct copy-tab utility. The agent explores the spreadsheet, plans the work, does it, checks its own results, and corrects its mistakes. The agent can also research on the web when the work needs information the spreadsheet does not have. For work the agent cannot do, see [Autosheet limitations](#autosheet-limitations).
+Autosheet combines a spreadsheet agent with a direct sheet-copy tool. The agent explores the spreadsheet, plans the work, does it, checks its own results, and corrects its mistakes. The agent can also research on the web when the work needs information the spreadsheet does not have. For work the agent cannot do, see [Autosheet limitations](#autosheet-limitations).
 
-#### Copying a tab
+#### Copying a sheet
 
-Copy one tab within the same spreadsheet or into another spreadsheet without starting an agent. The utility keeps values, formulas, formatting, notes, and embedded charts. It appends the copy as the last tab in the destination. Google gives the new tab a title that starts with `Copy of ` followed by the original title. References can break when the destination does not contain other tabs that the copied tab refers to.
+Copy one sheet within the same spreadsheet or into another spreadsheet without starting an agent. The tool keeps values, formulas, formatting, notes, and embedded charts. It appends the copy as the last sheet in the destination. Google gives the new sheet a title that starts with `Copy of ` followed by the original title. References can break when the destination does not contain other sheets that the copied sheet refers to.
 
 ```text
-Copy the Q3 Pipeline tab from this spreadsheet: <spreadsheet-url>
+Copy the Q3 Pipeline sheet from this spreadsheet: <spreadsheet-url>
 Copy it into this spreadsheet: <spreadsheet-url>
 ```
 
@@ -476,7 +476,7 @@ Research current industry benchmarks for SaaS churn and add them to a new Benchm
 
 **The agent works directly in your spreadsheet.** It does not work on a copy. Read-only work and bulk row-by-row processing cannot overwrite existing data. Other write operations can add, overwrite, move, or clear content.
 
-**Copying a tab never overwrites or merges tabs.** The copy-tab utility always appends a new tab to the destination spreadsheet, including when the source and destination are the same spreadsheet.
+**Copying a sheet never overwrites or merges sheets.** The sheet-copy tool always appends a new sheet to the destination spreadsheet, including when the source and destination are the same spreadsheet.
 
 **The agent applies changes by default.** It does not propose a plan and wait for you to accept it. If you want to see the intended approach before anything is written, ask for it explicitly — for example, "plan this first and show me before you change anything". For bulk work, you can ask the agent to do a few rows first so you can check the result before it processes the rest.
 
@@ -510,7 +510,7 @@ The spreadsheet agent cannot currently:
 - Show its sources for bulk web search
 - Record or run a macro
 - Run Apps Script or other add-ons
-- Export, download, convert, or copy spreadsheet files. The copy-tab utility copies tabs, not spreadsheet files
+- Export, download, convert, or copy spreadsheet files. The sheet-copy tool copies sheets, not spreadsheet files
 - Create new files
 
 ## Troubleshooting
@@ -523,13 +523,13 @@ The spreadsheet agent cannot currently:
 
 **The agent cannot open the spreadsheet.** Check that the Google account you signed in with has edit access to that spreadsheet, and that the spreadsheet has not been moved or deleted.
 
-**The copy-tab utility cannot write to the destination spreadsheet.** Check that the Google account you signed in with has edit access to the destination spreadsheet.
+**The sheet-copy tool cannot write to the destination spreadsheet.** Check that the Google account you signed in with has edit access to the destination spreadsheet.
 
-**The copy-tab utility cannot read the source spreadsheet.** Check that the Google account you signed in with has read access to the source spreadsheet, and that the spreadsheet has not been moved or deleted.
+**The sheet-copy tool cannot read the source spreadsheet.** Check that the Google account you signed in with has read access to the source spreadsheet, and that the spreadsheet has not been moved or deleted.
 
-**The copy-tab utility cannot find the tab.** Check that `sheet_id` is the tab's numeric ID or that `sheet_name` matches the tab title exactly. You can also copy the source URL while the tab is open so its `#gid=` selects the tab.
+**The sheet-copy tool cannot find the sheet.** Check that `sheet_id` is the sheet's numeric ID or that `sheet_name` matches the sheet title exactly. You can also copy the source URL while the sheet is open so its `#gid=` selects the sheet.
 
-**A copy-tab call timed out or its result is unclear.** Check the destination spreadsheet before retrying. The copy may have succeeded despite the timeout, and every call appends a new tab. Retrying a successful call creates a duplicate.
+**A sheet-copy call timed out or its result is unclear.** Check the destination spreadsheet before retrying. The copy may have succeeded despite the timeout, and every call appends a new sheet. Retrying a successful call creates a duplicate.
 
 **Every tool call fails with a Google connection error.** Connecting your client succeeds even when your Autosheet API key has no Google account attached, so the problem only shows up on the first tool call. Connect Google in the [GPT for Work dashboard](https://dashboard.gptforwork.com/), then try again.
 
