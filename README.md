@@ -1,6 +1,6 @@
 # Autosheet MCP
 
-Autosheet MCP is the hosted remote MCP server for [Autosheet](https://autosheet.com/), the spreadsheet agent that powers [GPT for Sheets](https://gptforwork.com/docs/gpt-for-sheets). The server lets compatible MCP clients run the agent directly in your existing spreadsheets.
+Autosheet MCP is the hosted remote MCP server for [Autosheet](https://autosheet.com/), the spreadsheet agent that powers [GPT for Sheets](https://gptforwork.com/docs/gpt-for-sheets). The server lets compatible MCP clients run the agent and use direct spreadsheet utilities in your existing spreadsheets.
 
 The server is hosted at:
 
@@ -20,7 +20,7 @@ Dedicated setup instructions are provided for [Claude](#claude), [Claude Code CL
 | --- | --- | --- |
 | `autosheet_start_agent_google_sheets_spreadsheet` | Starts a new Autosheet agent on a Google Sheets spreadsheet with your instruction. | `prompt`, `spreadsheet_id` |
 | `autosheet_follow_up_agent` | Continues an existing agent conversation with a new instruction. | `prompt`, `agent_id` |
-| `autosheet_get_agent` | Reports whether an agent is available or busy, and returns its last-turn messages. | `agent_id`; optional: `wait_seconds` |
+| `autosheet_get_agent` | Reports whether an agent is available or busy, and returns its last-turn messages. | `agent_id`, `wait_seconds` |
 | `autosheet_stop_agent` | Stops an agent that is still running. | `agent_id` |
 
 ### Spreadsheet utilities
@@ -472,7 +472,7 @@ Research current industry benchmarks for SaaS churn and add them to a new Benchm
 
 ## Important behavior and safe use
 
-**Approving tool calls.** MCP clients ask you to approve tool calls before they run. Where that prompt appears, how it is worded, and whether you can pre-approve a tool all vary by client. The tools that start work declare themselves as making changes, so clients that act on those declarations will prompt you before the agent touches a spreadsheet.
+**Approving tool calls.** MCP clients ask you to approve tool calls before they run. Where that prompt appears, how it is worded, and whether you can pre-approve a tool all vary by client. The tools that start work declare themselves as making changes, so clients that act on those declarations will prompt you before Autosheet changes a spreadsheet.
 
 **The agent works directly in your spreadsheet.** It does not work on a copy. Read-only work and bulk row-by-row processing cannot overwrite existing data. Other write operations can add, overwrite, move, or clear content.
 
@@ -510,8 +510,10 @@ The spreadsheet agent cannot currently:
 - Show its sources for bulk web search
 - Record or run a macro
 - Run Apps Script or other add-ons
-- Export, download, convert, or copy spreadsheet files. The sheet-copy tool copies sheets, not spreadsheet files
+- Export, download, convert, or copy spreadsheet files
 - Create new files
+
+The sheet-copy tool copies sheets, not spreadsheet files. See [Copying a sheet](#copying-a-sheet).
 
 ## Troubleshooting
 
