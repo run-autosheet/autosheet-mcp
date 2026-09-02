@@ -14,19 +14,12 @@ Dedicated setup instructions are provided for [Claude](#claude), [Claude Code CL
 
 ## MCP tools
 
-### Spreadsheet agent tools
-
 | Tool | What it does | Inputs |
 | --- | --- | --- |
 | `autosheet_start_agent_google_sheets_spreadsheet` | Starts a new Autosheet agent on a Google Sheets spreadsheet with your instruction. | `prompt`, `spreadsheet_id` |
 | `autosheet_follow_up_agent` | Continues an existing agent conversation with a new instruction. | `prompt`, `agent_id` |
 | `autosheet_get_agent` | Reports whether an agent is available or busy, and returns its last-turn messages. | `agent_id`, `wait_seconds` |
 | `autosheet_stop_agent` | Stops an agent that is still running. | `agent_id` |
-
-### Spreadsheet utilities
-
-| Tool | What it does | Inputs |
-| --- | --- | --- |
 | `autosheet_copy_tab_from_one_spreadsheet_to_another` | Copies one sheet within a spreadsheet or to another spreadsheet without starting an agent. | Required: `source_spreadsheet_id`, `destination_spreadsheet_id`; select the sheet with `sheet_id`, `sheet_name`, or `#gid=` in the source URL |
 
 Notes on the inputs:
