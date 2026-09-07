@@ -9,6 +9,7 @@ Public distribution repo for the Autosheet Claude Code / Codex plugin. It contai
 - `.claude-plugin/marketplace.json` — Claude Code marketplace (name: `autosheet`)
 - `.agents/plugins/marketplace.json` — Codex marketplace (name: `autosheet`)
 - `plugins/autosheet/` — the plugin: skills + MCP configuration for the hosted server at `https://mcp.autosheet.com/mcp`
+- the repository root — a second, standalone package named `autosheet-mcp` (`plugin.json` + `mcp.json` for Agent Plugins 1.0, `.codex-plugin/plugin.json` + `.mcp.json` for OpenAI, plus `skills/`), documented in `docs/plugin.md`
 
 The MCP server source is **not** in this repo and is not open source.
 
@@ -17,6 +18,8 @@ The MCP server source is **not** in this repo and is not open source.
 - **Never edit `plugins/` directly.** Its contents are synced from an internal upstream repo on each release and any direct edits will be overwritten by the next promotion. Changes to skills or plugin manifests must be made upstream and promoted via the publish script.
 - **Versioning**: this repo only ever carries clean release versions (`X.Y.Z`). Pre-release/beta versions (`X.Y.Z-beta.N`) live in the internal upstream repo only.
 - **Plugin renames/removals** must go through a top-level `renames` map in `.claude-plugin/marketplace.json` so existing installs migrate instead of erroring.
+- **The root package and `plugins/autosheet/` are separate entry points.** Editing the root package does not update the release-managed one, and vice versa. Don't add a root `.claude-plugin/plugin.json`: Claude installs `plugins/autosheet/` via the marketplace, and a root Claude manifest would offer a duplicate, differently-named install of the same server.
+- **Root-package listing metadata is validated by OpenAI** at upload and again, more strictly, at directory submission — `interface.displayName` and `interface.shortDescription` are capped at 30 characters, `brandColor` needs 2:1 contrast against white, and directory submission additionally requires square `logo`/`composerIcon` images, which this package does not currently ship. `docs/plugin.md` records the full set; check it before editing `.codex-plugin/plugin.json`.
 
 ## MCP configuration
 

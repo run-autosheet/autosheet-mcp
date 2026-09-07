@@ -1,0 +1,43 @@
+{
+  "name": "autosheet-mcp",
+  "version": "0.1.0",
+  "description": "Run Autosheet agents in Google Sheets to clean, transform, enrich, and analyze spreadsheet data.",
+  "author": {
+    "name": "GPT for Work",
+    "url": "https://autosheet.com/"
+  },
+  "homepage": "https://autosheet.com/",
+  "repository": "https://github.com/run-autosheet/autosheet-mcp",
+  "license": "MIT",
+  "keywords": [
+    "autosheet",
+    "google-sheets",
+    "spreadsheets",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Autosheet",
+    "shortDescription": "AI agents for Google Sheets",
+    "longDescription": "Run Autosheet agents in Google Sheets to clean, transform, enrich, and analyze spreadsheet data.\n\nPoint an agent at a Google Sheets spreadsheet and describe the work in plain language: fill a column with sentiment, categories, translations, summaries, or scores; clean, validate, or deduplicate rows; classify or analyze data; extract and transform cell contents; or copy a tab between spreadsheets. Follow up on the same agent to refine the result, check progress on a long run, or stop it.\n\nRequirements: connect your Autosheet account and sign in with Google to grant access to the spreadsheets you want the agent to work on. Agent runs consume Autosheet account usage.",
+    "developerName": "GPT for Work",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://autosheet.com/",
+    "supportURL": "https://support.gptforwork.com/hc/en-us/requests/new",
+    "privacyPolicyURL": "https://talarian.io/privacy-policy",
+    "termsOfServiceURL": "https://gptforwork.com/terms-of-service",
+    "defaultPrompt": [
+      "Clean and standardize the data in my Google Sheet.",
+      "Analyze my spreadsheet and summarize the findings.",
+      "Continue the work with my existing Autosheet agent."
+    ],
+    "brandColor": "#13263A",
+    "brandColorDark": "#00E795"
+  }
+}

@@ -12,6 +12,15 @@ You set up Autosheet MCP by connecting directly to the hosted server. This works
 
 Dedicated setup instructions are provided for [Claude](#claude), [Claude Code CLI](#claude-code-cli), [ChatGPT](#chatgpt), and [Codex CLI](#codex-cli). You can also use [any other MCP client](#other-compatible-mcp-clients) that supports remote servers over Streamable HTTP with OAuth.
 
+## Standalone plugin package
+
+This repository also includes a root-level `autosheet-mcp` package for ChatGPT,
+Codex, and other Agent Plugins 1.0 clients, following the layout used by Exa.
+See [plugin packaging and ChatGPT setup](docs/plugin.md) for archive instructions,
+ChatGPT web registration, listing-metadata limits, and acceptance checks. Claude
+installs the release-managed package under `plugins/autosheet/` through the
+marketplace; install one entry point at a time.
+
 ## MCP tools
 
 | Tool | What it does | Inputs |
