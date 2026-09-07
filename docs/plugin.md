@@ -29,10 +29,12 @@ The root package ships no `.claude-plugin/plugin.json`. Claude installs
 duplicate, differently-named install of the same server.
 
 It also ships no branding images. `interface.brandColor` and
-`interface.brandColorDark` carry the brand, which is enough for local marketplace
-installs and workspace publishing. Directory submission additionally requires
-`interface.logo` and `interface.composerIcon`, so add square PNGs under
-`./assets/` and declare both fields before submitting. Render them from the
+`interface.brandColorDark` carry the brand for local marketplace installs and
+workspace publishing. The public directory listing does not read this manifest
+at all: the **With MCP** submission is a portal form, and the logo is uploaded
+there (the portal caps that upload at roughly 10 KB). `interface.logo` and
+`interface.composerIcon` are only validated when the package itself is uploaded
+as a ZIP, so add them only if that path is ever used. Render any logo from the
 official mark at `https://autosheet.com/icon.svg` rather than committing a
 hand-traced copy.
 
@@ -69,7 +71,7 @@ at directory submission. The limits that bind the current manifest:
 | `interface.longDescription` | Required, at most 4,000 characters; line breaks allowed |
 | `interface.category` | One of the supported categories; `Productivity` here |
 | `interface.defaultPrompt` | At most 3 entries, each one line, at most 128 characters, unique, no `@mention` |
-| `interface.logo`, `interface.composerIcon` | Both required at directory submission; square image, at least 48x48, at most 4,096x4,096, under 5 MiB, path starting `./` |
+| `interface.logo`, `interface.composerIcon` | Required only when the package is uploaded as a ZIP; square image, at least 48x48, at most 4,096x4,096, under 5 MiB, path starting `./`. Not read by the portal form |
 | `interface.brandColor` | Needs at least 2:1 contrast against white, so the navy `#13263A` is used, not the green |
 | `interface.brandColorDark` | Needs at least 2:1 contrast against `#212121`, which the green `#00E795` meets |
 | Listing URLs | `websiteURL`, `supportURL`, `privacyPolicyURL`, and `termsOfServiceURL` are all required for an MCP-backed submission and must be HTTPS |
@@ -86,12 +88,15 @@ for the full list of validation codes.
 
 ## Directory submission prerequisites outside this repository
 
-Package validation is only part of the **With MCP** submission. The following are
-properties of the deployed server and the portal draft, not of these files:
+The **With MCP** submission is a portal form, not a package upload. Listing
+details, the MCP server URL, starter prompts, and test cases are entered there,
+and nothing in this repository is consumed by it. The following are properties of
+the deployed server and the portal draft, not of these files:
 
-- A domain-verification token served at
+- A domain-verification token served as plain text at
   `https://mcp.autosheet.com/.well-known/openai-apps-challenge`, matching the
-  token the portal issues.
+  token the portal issues. The endpoint must return exactly that one token: no
+  JSON, no list, no multiple tokens.
 - A current, successful tool scan of the production endpoint, with explicit
   `readOnlyHint`, `openWorldHint`, and `destructiveHint` values plus a
   justification for each on every tool.

@@ -19,7 +19,7 @@ The MCP server source is **not** in this repo and is not open source.
 - **Versioning**: this repo only ever carries clean release versions (`X.Y.Z`). Pre-release/beta versions (`X.Y.Z-beta.N`) live in the internal upstream repo only.
 - **Plugin renames/removals** must go through a top-level `renames` map in `.claude-plugin/marketplace.json` so existing installs migrate instead of erroring.
 - **The root package and `plugins/autosheet/` are separate entry points.** Editing the root package does not update the release-managed one, and vice versa. Don't add a root `.claude-plugin/plugin.json`: Claude installs `plugins/autosheet/` via the marketplace, and a root Claude manifest would offer a duplicate, differently-named install of the same server.
-- **Root-package listing metadata is validated by OpenAI** at upload and again, more strictly, at directory submission — `interface.displayName` and `interface.shortDescription` are capped at 30 characters, `brandColor` needs 2:1 contrast against white, and directory submission additionally requires square `logo`/`composerIcon` images, which this package does not currently ship. `docs/plugin.md` records the full set; check it before editing `.codex-plugin/plugin.json`.
+- **Root-package listing metadata is validated by OpenAI** at upload and again, more strictly, at directory submission — `interface.displayName` and `interface.shortDescription` are capped at 30 characters, `brandColor` needs 2:1 contrast against white. `logo`/`composerIcon` are only checked when the package is uploaded as a ZIP — the public directory submission is a portal form that never reads this manifest. `docs/plugin.md` records the full set; check it before editing `.codex-plugin/plugin.json`.
 
 ## MCP configuration
 
