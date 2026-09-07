@@ -21,6 +21,5 @@
       "type": "http",
       "url": "https://mcp.autosheet.com/mcp/"
     }
-  },
-  "skills": "./skills/"
+  }
 }

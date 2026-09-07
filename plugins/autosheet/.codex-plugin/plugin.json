@@ -16,7 +16,6 @@
     "automation",
     "autosheet"
   ],
-  "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Autosheet",
