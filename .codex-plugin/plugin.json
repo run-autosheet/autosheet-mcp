@@ -15,7 +15,6 @@
     "spreadsheets",
     "mcp"
   ],
-  "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Autosheet",

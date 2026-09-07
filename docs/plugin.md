@@ -21,7 +21,6 @@ project's release process.
 | `.mcp.json` | Native OpenAI HTTP MCP connection, referenced by the manifest's `mcpServers` field |
 | `plugin.json` | Agent Plugins 1.0 manifest, matching Exa's layout |
 | `mcp.json` | Agent Plugins 1.0 Streamable HTTP connection |
-| `skills/autosheet/SKILL.md` | Shared spreadsheet workflow |
 | `docs/plugin.md` | Installation and verification instructions |
 
 The root package ships no `.claude-plugin/plugin.json`. Claude installs
@@ -46,7 +45,7 @@ both MCP declarations into the same client.
 Create an upload archive from the repository root with this explicit file list:
 
 ```bash
-zip /tmp/autosheet-mcp-plugin.zip .codex-plugin/plugin.json .mcp.json plugin.json mcp.json skills/autosheet/SKILL.md docs/plugin.md
+zip /tmp/autosheet-mcp-plugin.zip .codex-plugin/plugin.json .mcp.json plugin.json mcp.json docs/plugin.md
 ```
 
 Use a fresh archive filename for subsequent releases. Do not archive the entire
@@ -76,8 +75,11 @@ at directory submission. The limits that bind the current manifest:
 | Listing URLs | `websiteURL`, `supportURL`, `privacyPolicyURL`, and `termsOfServiceURL` are all required for an MCP-backed submission and must be HTTPS |
 
 `interface.screenshots` is rejected unless the MCP tool scan reports a UI output
-template, so this package ships none. Skill instructions must use
-provider-neutral language rather than naming a specific assistant.
+template, so this package ships none. The package ships no skills either: the
+MCP tool descriptions carry the workflow, and OpenAI's **With MCP** route treats
+skills as optional. If one is added later, it must use provider-neutral language
+rather than naming a specific assistant, and the manifest must declare
+`"skills": "./skills/"`.
 
 See the [submission error reference](https://developers.openai.com/plugins/deploy/submission-errors)
 for the full list of validation codes.
@@ -105,7 +107,7 @@ Import the plugin archive through the supported plugin import flow for your
 workspace. Complete OAuth and start a new conversation with Autosheet enabled.
 Workspace policy may restrict imports.
 
-For an MCP-only Codex connection, without the bundled skill:
+For a direct Codex connection without installing the plugin:
 
 ```bash
 codex mcp add autosheet --url https://mcp.autosheet.com/mcp
@@ -130,12 +132,12 @@ ID (remove the `plugin_` prefix from a `plugin_asdk_app_…` browser URL). Add a
 `.app.json` file containing an `apps` object with an `autosheet` entry whose `id`
 is that real ID and `required` is `true`. In the web package, replace the native
 manifest's `mcpServers` field with `apps: "./.app.json"` and exclude both raw MCP
-files and the alternative client manifests. Keep the native manifest and skill.
+files and the alternative client manifests. Keep the native manifest.
 No `.app.json` is shipped here because a registered connection ID has not been
 provided. Do not invent an ID or commit a placeholder as a working connection.
 
 For public directory distribution, use OpenAI's **With MCP** submission route
-with the hosted endpoint and optional skill. Complete the listing, authentication,
+with the hosted endpoint. Complete the listing, authentication,
 tool scan, and review in the portal; a Claude approval does not transfer.
 See [Claude plugin migration](https://developers.openai.com/plugins/guides/submit-claude-plugin)
 and [plugin packaging](https://developers.openai.com/plugins/build/plugins).

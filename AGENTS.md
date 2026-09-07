@@ -9,7 +9,7 @@ Public distribution repo for the Autosheet Claude Code / Codex plugin. It contai
 - `.claude-plugin/marketplace.json` — Claude Code marketplace (name: `autosheet`)
 - `.agents/plugins/marketplace.json` — Codex marketplace (name: `autosheet`)
 - `plugins/autosheet/` — the plugin: skills + MCP configuration for the hosted server at `https://mcp.autosheet.com/mcp`
-- the repository root — a second, standalone package named `autosheet-mcp` (`plugin.json` + `mcp.json` for Agent Plugins 1.0, `.codex-plugin/plugin.json` + `.mcp.json` for OpenAI, plus `skills/`), documented in `docs/plugin.md`
+- the repository root — a second, standalone package named `autosheet-mcp` (`plugin.json` + `mcp.json` for Agent Plugins 1.0, `.codex-plugin/plugin.json` + `.mcp.json` for OpenAI), documented in `docs/plugin.md`
 
 The MCP server source is **not** in this repo and is not open source.
 
