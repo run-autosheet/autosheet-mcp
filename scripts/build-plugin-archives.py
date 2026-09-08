@@ -3,7 +3,9 @@
 
 Source of truth is `plugin.json` (Agent Plugins 1.0) and `mcp.json`. The OpenAI
 manifest `.codex-plugin/plugin.json` is generated here from those two files and
-never committed, so the repository root stays a clean Agent Plugins package.
+never committed, so the repository root stays a clean Agent Plugins package. The
+OpenAI archive is for the ChatGPT workspace-admin import and local Codex
+marketplaces; the plugin portal's ZIP path is skills-only and rejects it.
 
 Usage: scripts/build-plugin-archives.py [OUT_DIR]   (default: dist/)
 """
@@ -61,7 +63,7 @@ def openai_manifest(plugin, mcp):
         "interface": interface,
     }
 
-    # Limits OpenAI applies when the ZIP is uploaded; see docs/plugin.md.
+    # Limits from OpenAI's shared package checks (workspace-admin import, Codex marketplaces); see docs/plugin.md.
     check(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}", manifest["name"]), "name: letters, digits, _ or -, at most 64 chars")
     check(len(manifest["description"]) <= 1024, "description over 1,024 characters")
     check(manifest["author"]["name"] == interface.get("developerName"), "author.name must equal interface.developerName")

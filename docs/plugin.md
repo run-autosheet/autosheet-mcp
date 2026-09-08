@@ -72,7 +72,7 @@ and moving the improved `interface` block into the upstream source.
 | Client | Files read | How it gets the package |
 | --- | --- | --- |
 | Agent Plugins 1.0 clients: ChatGPT, Codex, VS Code, Cursor, GitHub Copilot, Kiro, Hermes, OpenClaw, Grok Bot, NanoClaw | `plugin.json`, `mcp.json` | Point the client at the repository root (or a clone of it) as a plugin, or install the portable ZIP built below |
-| ChatGPT desktop and Codex via ZIP upload | generated `.codex-plugin/plugin.json` | Upload the OpenAI ZIP built below through the plugin import flow. Imported plugins that declare MCP servers are **desktop-only**, including remote HTTPS servers, and workspace policy may restrict imports |
+| ChatGPT workspace-admin import (`chatgpt.com/admin/plugins`) and local Codex marketplaces | generated `.codex-plugin/plugin.json` | Import the OpenAI ZIP built below through **Admin > Plugins** in ChatGPT, or add it to a local Codex marketplace. Imported plugins that declare MCP servers are **desktop-only**, including remote HTTPS servers, and workspace policy may restrict imports. This ZIP cannot go to the plugin portal: its only ZIP path is skills-only and rejects a package with `mcpServers`; the public directory goes through the **With MCP** form |
 
 Adding this repository as a marketplace, or importing it from GitHub, does **not**
 surface `autosheet-mcp`: both importers read the marketplace manifests, which list
@@ -112,9 +112,9 @@ the root.
 
 Deliberately absent:
 
-- **No committed `.codex-plugin/plugin.json`.** OpenAI's ZIP upload check needs
-  that file, so the build script generates it from `plugin.json` and `mcp.json`
-  into the archive. Committing it would break the §8 layout and duplicate the
+- **No committed `.codex-plugin/plugin.json`.** The ChatGPT workspace-admin import
+  and Codex marketplaces need that file, so the build script generates it from
+  `plugin.json` and `mcp.json` into the archive. Committing it would break the §8 layout and duplicate the
   listing block.
 - **No root `.mcp.json`.** Claude Code loads a repository-root `.mcp.json` as a
   project-scoped MCP server for everyone who opens the repo.
@@ -123,8 +123,8 @@ Deliberately absent:
   the same server. It arrives with the consolidation in [Target layout](#target-layout),
   when `plugins/` goes away.
 - **No skills, screenshots, or logo images.** The MCP tool descriptions carry the
-  workflow. `interface.logo` and `interface.composerIcon` are required on the ZIP
-  upload path; add square images under `./assets/`, declare both fields in the
+  workflow. `interface.logo` and `interface.composerIcon` are required by the
+  package checks; add square images under `./assets/`, declare both fields in the
   `interface` block, and teach the build script to copy them before relying on
   that path. Render them from `https://autosheet.com/icon.svg`.
 
@@ -140,23 +140,24 @@ This writes two files to `dist/` (git-ignored), named with the version from
 | Archive | Contents | For |
 | --- | --- | --- |
 | `autosheet-agent-plugin-<version>.zip` | `plugin.json`, `mcp.json`, `LICENSE` | Agent Plugins 1.0 clients |
-| `autosheet-mcp-plugin-<version>.zip` | generated `.codex-plugin/plugin.json`, `LICENSE` | OpenAI ZIP upload |
+| `autosheet-mcp-plugin-<version>.zip` | generated `.codex-plugin/plugin.json`, `LICENSE` | ChatGPT workspace-admin import (`chatgpt.com/admin/plugins`) and local Codex marketplaces. Not the plugin portal: its ZIP path is skills-only and rejects a package with `mcpServers`; the public directory goes through the **With MCP** form |
 
 The generated OpenAI manifest copies identity, author, license and keywords from
 `plugin.json`, converts the `mcp.json` server to `type: "http"` as an inline
 `mcpServers` block, and takes `interface` from `extensions.com.openai`. The script
 refuses to build if the listing text breaks the OpenAI limits below, so a bad edit
-fails locally instead of at upload. Bump `version` in `plugin.json` for every
+fails locally instead of at import. Bump `version` in `plugin.json` for every
 release; Agent Plugins clients use it for update checks.
 
 Never archive the whole repository: `zip -r .` would bundle `plugins/autosheet/`
 and both marketplace manifests, producing two plugin roots under different names.
 
-## Listing metadata constraints (ZIP upload path)
+## Listing metadata constraints (package checks)
 
-OpenAI validates the generated `.codex-plugin/plugin.json` when the OpenAI ZIP is
-uploaded. Limits that bind the current manifest (the build script checks the ones
-marked ✓):
+OpenAI runs its shared package checks on the generated `.codex-plugin/plugin.json`
+when the package is imported through the ChatGPT workspace admin or a Codex
+marketplace. Limits that bind the current manifest (the build script checks the
+ones marked ✓):
 
 | Field | Rule |
 | --- | --- |
