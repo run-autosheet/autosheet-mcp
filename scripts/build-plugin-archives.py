@@ -2,8 +2,10 @@
 """Build the two distributable archives for the root `autosheet-mcp` package.
 
 Source of truth is `plugin.json` (Agent Plugins 1.0) and `mcp.json`. The OpenAI
-manifest `.codex-plugin/plugin.json` is generated here from those two files and
-never committed, so the repository root stays a clean Agent Plugins package. The
+manifest `.codex-plugin/plugin.json` and its `.mcp.json` are generated here from
+those two files and never committed, so the repository root stays a clean Agent
+Plugins package. OpenAI's upload validator requires `mcpServers` to be the string
+path "./.mcp.json" (an inline object is rejected), so the servers go in that file. The
 OpenAI archive is for the ChatGPT workspace-admin import and local Codex
 marketplaces; the plugin portal's ZIP path is skills-only and rejects it.
 
@@ -59,7 +61,7 @@ def openai_manifest(plugin, mcp):
         "repository": plugin["repository"],
         "license": plugin["license"],
         "keywords": plugin["keywords"],
-        "mcpServers": servers,
+        "mcpServers": "./.mcp.json",
         "interface": interface,
     }
 
@@ -76,7 +78,7 @@ def openai_manifest(plugin, mcp):
     check(all("\n" not in p and len(p) <= 128 and "@" not in p for p in prompts), "interface.defaultPrompt: one line, <=128 chars, no @mention")
     for field in ("websiteURL", "supportURL", "privacyPolicyURL", "termsOfServiceURL"):
         check(interface.get(field, "").startswith("https://"), f"interface.{field} must be an HTTPS URL")
-    return manifest
+    return manifest, {"mcpServers": servers}
 
 
 def write_zip(target, files):
@@ -95,7 +97,7 @@ def main():
     check(plugin.get("$schema") == AGENT_PLUGIN_SCHEMA, "plugin.json $schema is not Agent Plugins 1.0.0")
     check(mcp.get("$schema") == AGENT_MCP_SCHEMA, "mcp.json $schema is not Agent Plugins 1.0.0")
     version = plugin["version"]
-    native_manifest = openai_manifest(plugin, mcp)  # validates before anything is written
+    native_manifest, native_mcp = openai_manifest(plugin, mcp)  # validates before anything is written
 
     write_zip(out_dir / f"autosheet-agent-plugin-{version}.zip", [
         ("plugin.json", ROOT / "plugin.json"),
@@ -107,8 +109,11 @@ def main():
         manifest_path = Path(tmp) / ".codex-plugin" / "plugin.json"
         manifest_path.parent.mkdir()
         manifest_path.write_text(json.dumps(native_manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        mcp_path = Path(tmp) / ".mcp.json"
+        mcp_path.write_text(json.dumps(native_mcp, indent=2) + "\n", encoding="utf-8")
         write_zip(out_dir / f"autosheet-mcp-plugin-{version}.zip", [
             (".codex-plugin/plugin.json", manifest_path),
+            (".mcp.json", mcp_path),
             ("LICENSE", ROOT / "LICENSE"),
         ])
 

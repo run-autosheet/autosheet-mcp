@@ -140,11 +140,13 @@ This writes two files to `dist/` (git-ignored), named with the version from
 | Archive | Contents | For |
 | --- | --- | --- |
 | `autosheet-agent-plugin-<version>.zip` | `plugin.json`, `mcp.json`, `LICENSE` | Agent Plugins 1.0 clients |
-| `autosheet-mcp-plugin-<version>.zip` | generated `.codex-plugin/plugin.json`, `LICENSE` | ChatGPT workspace-admin import (`chatgpt.com/admin/plugins`) and local Codex marketplaces. Not the plugin portal: its ZIP path is skills-only and rejects a package with `mcpServers`; the public directory goes through the **With MCP** form |
+| `autosheet-mcp-plugin-<version>.zip` | generated `.codex-plugin/plugin.json` + `.mcp.json`, `LICENSE` | ChatGPT workspace-admin import (`chatgpt.com/admin/plugins`) and local Codex marketplaces. Not the plugin portal: its ZIP path is skills-only and rejects a package with `mcpServers`; the public directory goes through the **With MCP** form |
 
 The generated OpenAI manifest copies identity, author, license and keywords from
-`plugin.json`, converts the `mcp.json` server to `type: "http"` as an inline
-`mcpServers` block, and takes `interface` from `extensions.com.openai`. The script
+`plugin.json`, converts the `mcp.json` server to `type: "http"` in a generated `.mcp.json`,
+points the manifest at it with `"mcpServers": "./.mcp.json"` (OpenAI's upload
+validator rejects an inline `mcpServers` object with *"mcpServers must be a string
+path for the root .mcp.json"*), and takes `interface` from `extensions.com.openai`. The script
 refuses to build if the listing text breaks the OpenAI limits below, so a bad edit
 fails locally instead of at import. Bump `version` in `plugin.json` for every
 release; Agent Plugins clients use it for update checks.
