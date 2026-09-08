@@ -1,156 +1,208 @@
 # Autosheet plugin packaging
 
-This repository contains a distributable plugin for the production MCP endpoint
-`https://mcp.autosheet.com/mcp`. Plugin versioning is independent of the server's
-package version. No server build or local credentials are needed to distribute it.
+The repository root is a standalone plugin package named `autosheet-mcp` for the
+hosted MCP endpoint `https://mcp.autosheet.com/mcp`. It is separate from the
+release-managed package under `plugins/autosheet/`, which the Claude and Codex
+marketplaces (`.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`)
+install under the name `autosheet`. Root-package changes do not update that
+package; its manifests are edited in the internal upstream and promoted through
+that project's release process. Never edit `plugins/` here.
+
+**This two-package layout is transitional.** The target is one package at the
+repository root serving every client; see [Target layout](#target-layout) below.
+
+## Target layout
+
+Two packages for one server is the source of most confusion in this repo: two
+names, two manifests, two copies of the listing text, and rules asking maintainers
+to keep them aligned. The intended end state is a single root package, the layout
+Exa uses in `exa-labs/exa-mcp-server`:
+
+```text
+<repo root>/
+├── plugin.json                  Agent Plugins 1.0 manifest (Codex, ChatGPT, VS Code, Cursor, ...)
+├── mcp.json                     Agent Plugins 1.0 MCP config, streamable-http
+├── .claude-plugin/
+│   ├── plugin.json              Claude Code manifest, MCP server declared inline
+│   └── marketplace.json         Claude marketplace, plugin source "./"
+├── .agents/plugins/
+│   └── marketplace.json         Codex marketplace, plugin source "./"
+├── skills/                      shared by every format
+├── scripts/build-plugin-archives.py
+├── LICENSE
+└── docs/plugin.md
+```
+
+`plugins/` disappears. There is one plugin name, `autosheet`, so existing
+marketplace installs keep working and no `renames` entry is needed. The Claude
+manifest keeps its MCP server inline, so no root `.mcp.json` is ever added (Claude
+Code would load one as a project server for every contributor). `plugin.json`
+stays the single source of the OpenAI listing block under
+`extensions.com.openai`, and the build script keeps generating the OpenAI ZIP.
+
+Why it is not done in this PR: `plugins/autosheet/` is not authored here. The
+internal upstream repository publishes it into this one on every release, so
+consolidating means changing that publish step to write the root files instead,
+and moving the improved `interface` block into the upstream source.
+
+### Migration steps
+
+1. **Verify the OpenAI import path.** OpenAI's GitHub importer documents only
+   `.codex-plugin/plugin.json` for marketplace entries; Codex's loader accepts a
+   root Agent Plugins manifest, but the importer is unverified. Push a scratch
+   repo with the target layout and import it into ChatGPT and Codex. If the
+   importer rejects it, keep the build script's generated `.codex-plugin/plugin.json`
+   out of git and add a marketplace entry with `"source": "url"` instead, or
+   accept committing the native manifest and drop the §8 strictness.
+2. **Upstream:** change the publish script to emit `.claude-plugin/plugin.json`,
+   `skills/`, and the Agent Plugins `plugin.json` + `mcp.json` at the root of this
+   repo, under the name `autosheet`; carry the `interface` block from the current
+   root `plugin.json` into the upstream source; drop the upstream `.codex-plugin/`
+   and `.mcp.json` outputs.
+3. **Here, in the same release:** point both marketplace entries at `"./"`, delete
+   `plugins/`, remove the transitional notes from this file and `AGENTS.md`, and
+   rename the root package from `autosheet-mcp` to `autosheet` in `plugin.json`.
+4. **Verify:** `scripts/build-plugin-archives.py` still builds both archives; the
+   Claude marketplace installs from `./` in a fresh Claude Code session; Codex
+   installs from the marketplace and connects through `mcp.json`; run the
+   [acceptance checks](#acceptance-checks) once per client.
+
+## Who reads the root package
+
+| Client | Files read | How it gets the package |
+| --- | --- | --- |
+| Agent Plugins 1.0 clients: ChatGPT, Codex, VS Code, Cursor, GitHub Copilot, Kiro, Hermes, OpenClaw, Grok Bot, NanoClaw | `plugin.json`, `mcp.json` | Point the client at the repository root (or a clone of it) as a plugin, or install the portable ZIP built below |
+| ChatGPT workspace-admin import (`chatgpt.com/admin/plugins`) and local Codex marketplaces | generated `.codex-plugin/plugin.json` | Import the OpenAI ZIP built below through **Admin > Plugins** in ChatGPT, or add it to a local Codex marketplace. Imported plugins that declare MCP servers are **desktop-only**, including remote HTTPS servers, and workspace policy may restrict imports. This ZIP cannot go to the plugin portal: its only ZIP path is skills-only and rejects a package with `mcpServers`; the public directory goes through the **With MCP** form |
+
+Adding this repository as a marketplace, or importing it from GitHub, does **not**
+surface `autosheet-mcp`: both importers read the marketplace manifests, which list
+only `autosheet` from `plugins/autosheet/`. The root package is reached by a
+marketplace entry that points at the repository root, or by the ZIPs built below.
+OpenAI's GitHub importer documents only `.codex-plugin/plugin.json` for marketplace
+entries; whether it accepts a root Agent Plugins manifest is unverified, so if a
+marketplace entry for the root package is ever added, test that path first.
+
+How Codex loads this layout (from `codex-rs/core-plugins` in the Codex source):
+because the root `plugin.json` declares the agent-plugins.org `$schema`, Codex
+treats it as the primary manifest. Identity, `version` and `description` come from
+it, MCP servers come from `mcp.json` (`streamable-http`; legacy `sse` is
+rejected), skills would come from `skills/`, and the listing block comes from
+`extensions.com.openai.interface`. Codex prefers that block over a
+`.codex-plugin/plugin.json` overlay when both exist, so the generated file is
+never needed at runtime.
+
+For users who just want the server, the README already covers
+[ChatGPT](../README.md#chatgpt) and the [Codex CLI](../README.md#codex-cli) with a
+direct connection and no package at all.
 
 ## Package layout
 
-The root package is a separate, standalone entry point named `autosheet-mcp`,
-serving OpenAI (ChatGPT and Codex) and Agent Plugins 1.0 clients. It is distinct
-from the release-managed marketplace package under `plugins/autosheet/`, which
-remains the target of the Claude and Codex marketplaces declared in
-`.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`. Install
-one entry point at a time. Root-package changes do not update the release-managed
-package: its updates are made in the internal upstream and promoted through that
-project's release process.
-
 | Path | Purpose |
 | --- | --- |
-| `.codex-plugin/plugin.json` | Native OpenAI plugin manifest, including the `interface` listing block |
-| `.mcp.json` | Native OpenAI HTTP MCP connection, referenced by the manifest's `mcpServers` field |
-| `plugin.json` | Agent Plugins 1.0 manifest, matching Exa's layout |
-| `mcp.json` | Agent Plugins 1.0 Streamable HTTP connection |
-| `docs/plugin.md` | Installation and verification instructions |
+| `plugin.json` | Agent Plugins 1.0 manifest. Carries the OpenAI listing block under `extensions.com.openai.interface` |
+| `mcp.json` | Agent Plugins 1.0 MCP configuration, `type: "streamable-http"` |
+| `LICENSE` | MIT, matching the `license` field |
+| `scripts/build-plugin-archives.py` | Builds both ZIPs and generates the OpenAI manifest; not part of either package |
 
-The root package ships no `.claude-plugin/plugin.json`. Claude installs
-`plugins/autosheet/` through the marketplace, and OpenAI's portal prefers
-`.codex-plugin/plugin.json`; a second Claude manifest at the root would offer a
-duplicate, differently-named install of the same server.
+The Agent Plugins spec (§8) requires client-specific data to live under a
+reverse-domain namespace, either in `extensions` or in a top-level directory of
+that name. `com.openai` is Codex's namespace, so the listing block in
+`extensions` is the spec-conformant form and nothing client-specific sits loose at
+the root.
 
-It also ships no branding images. `interface.brandColor` and
-`interface.brandColorDark` carry the brand for local marketplace installs and
-workspace publishing. The public directory listing does not read this manifest
-at all: the **With MCP** submission is a portal form, and the logo is uploaded
-there (the portal caps that upload at roughly 10 KB). `interface.logo` and
-`interface.composerIcon` are only validated when the package itself is uploaded
-as a ZIP, so add them only if that path is ever used. Render any logo from the
-official mark at `https://autosheet.com/icon.svg` rather than committing a
-hand-traced copy.
+Deliberately absent:
 
-The native MCP file uses `type: "http"`; the Agent Plugins file uses
-`type: "streamable-http"`. Both target the same server. Keep the identity,
-description, and version aligned across manifests and the URLs aligned across
-MCP files. Each client should load the format it supports; do not manually install
-both MCP declarations into the same client.
+- **No committed `.codex-plugin/plugin.json`.** The ChatGPT workspace-admin import
+  and Codex marketplaces need that file, so the build script generates it from
+  `plugin.json` and `mcp.json` into the archive. Committing it would break the §8 layout and duplicate the
+  listing block.
+- **No root `.mcp.json`.** Claude Code loads a repository-root `.mcp.json` as a
+  project-scoped MCP server for everyone who opens the repo.
+- **No root `.claude-plugin/plugin.json` yet.** While `plugins/autosheet/` exists,
+  a root Claude manifest would give Claude Code a second, differently named copy of
+  the same server. It arrives with the consolidation in [Target layout](#target-layout),
+  when `plugins/` goes away.
+- **No skills, screenshots, or logo images.** The MCP tool descriptions carry the
+  workflow. `interface.logo` and `interface.composerIcon` are required by the
+  package checks; add square images under `./assets/`, declare both fields in the
+  `interface` block, and teach the build script to copy them before relying on
+  that path. Render them from `https://autosheet.com/icon.svg`.
 
-Create an upload archive from the repository root with this explicit file list:
+## Building the archives
 
 ```bash
-zip /tmp/autosheet-mcp-plugin.zip .codex-plugin/plugin.json .mcp.json plugin.json mcp.json docs/plugin.md
+scripts/build-plugin-archives.py
 ```
 
-Use a fresh archive filename for subsequent releases. Do not archive the entire
-server repository: its source, environment files, and infrastructure documentation
-are not part of the plugin. This package does not create a personal marketplace
-or change any installed client configuration.
+This writes two files to `dist/` (git-ignored), named with the version from
+`plugin.json`:
 
-## Listing metadata constraints
+| Archive | Contents | For |
+| --- | --- | --- |
+| `autosheet-agent-plugin-<version>.zip` | `plugin.json`, `mcp.json`, `LICENSE` | Agent Plugins 1.0 clients |
+| `autosheet-mcp-plugin-<version>.zip` | generated `.codex-plugin/plugin.json`, `LICENSE` | ChatGPT workspace-admin import (`chatgpt.com/admin/plugins`) and local Codex marketplaces. Not the plugin portal: its ZIP path is skills-only and rejects a package with `mcpServers`; the public directory goes through the **With MCP** form |
 
-OpenAI validates `.codex-plugin/plugin.json` at upload and again, more strictly,
-at directory submission. The limits that bind the current manifest:
+The generated OpenAI manifest copies identity, author, license and keywords from
+`plugin.json`, converts the `mcp.json` server to `type: "http"` as an inline
+`mcpServers` block, and takes `interface` from `extensions.com.openai`. The script
+refuses to build if the listing text breaks the OpenAI limits below, so a bad edit
+fails locally instead of at import. Bump `version` in `plugin.json` for every
+release; Agent Plugins clients use it for update checks.
+
+Never archive the whole repository: `zip -r .` would bundle `plugins/autosheet/`
+and both marketplace manifests, producing two plugin roots under different names.
+
+## Listing metadata constraints (package checks)
+
+OpenAI runs its shared package checks on the generated `.codex-plugin/plugin.json`
+when the package is imported through the ChatGPT workspace admin or a Codex
+marketplace. Limits that bind the current manifest (the build script checks the
+ones marked ✓):
 
 | Field | Rule |
 | --- | --- |
-| `name` | ASCII letters, digits, `_`, `-`; starts alphanumeric; at most 64 characters |
+| `name` | ASCII letters, digits, `_`, `-`; starts alphanumeric; at most 64 characters ✓ |
 | `version` | Semantic version; a new release must change it |
-| `description` | Required, at most 1,024 characters |
-| `author.name` | Required, and must match `interface.developerName` |
-| `interface.displayName` | Required, one line, at most 30 characters at final submission |
-| `interface.shortDescription` | Required, one line, at most 30 characters at final submission |
-| `interface.longDescription` | Required, at most 4,000 characters; line breaks allowed |
+| `description` | Required, at most 1,024 characters ✓ |
+| `author.name` | Required, and must match `interface.developerName` ✓ |
+| `interface.displayName`, `interface.shortDescription` | Required, one line, at most 30 characters ✓ |
+| `interface.longDescription` | Required, at most 4,000 characters; line breaks allowed ✓ |
 | `interface.category` | One of the supported categories; `Productivity` here |
-| `interface.defaultPrompt` | At most 3 entries, each one line, at most 128 characters, unique, no `@mention` |
-| `interface.logo`, `interface.composerIcon` | Required only when the package is uploaded as a ZIP; square image, at least 48x48, at most 4,096x4,096, under 5 MiB, path starting `./`. Not read by the portal form |
-| `interface.brandColor` | Needs at least 2:1 contrast against white, so the navy `#13263A` is used, not the green |
-| `interface.brandColorDark` | Needs at least 2:1 contrast against `#212121`, which the green `#00E795` meets |
-| Listing URLs | `websiteURL`, `supportURL`, `privacyPolicyURL`, and `termsOfServiceURL` are all required for an MCP-backed submission and must be HTTPS |
+| `interface.defaultPrompt` | At most 3 entries, each one line, at most 128 characters, unique, no `@mention` ✓ |
+| `interface.logo`, `interface.composerIcon` | Required; square image, 48x48 to 4,096x4,096, under 5 MiB, path starting `./` |
+| `interface.brandColor` | At least 2:1 contrast against white; the navy `#13263A` passes, the brand green does not |
+| `interface.brandColorDark` | At least 2:1 contrast against `#212121`; the green `#00E795` passes |
+| Listing URLs | `websiteURL`, `supportURL`, `privacyPolicyURL`, `termsOfServiceURL` all present and HTTPS ✓ |
+| `interface.screenshots` | Rejected unless the tool scan reports a UI output template; ship none |
 
-`interface.screenshots` is rejected unless the MCP tool scan reports a UI output
-template, so this package ships none. The package ships no skills either: the
-MCP tool descriptions carry the workflow, and OpenAI's **With MCP** route treats
-skills as optional. If one is added later, it must use provider-neutral language
-rather than naming a specific assistant, and the manifest must declare
-`"skills": "./skills/"`.
+Full list of validation codes: [submission error reference](https://developers.openai.com/plugins/deploy/submission-errors).
 
-See the [submission error reference](https://developers.openai.com/plugins/deploy/submission-errors)
-for the full list of validation codes.
+## Public directory listing (With MCP)
 
-## Directory submission prerequisites outside this repository
-
-The **With MCP** submission is a portal form, not a package upload. Listing
-details, the MCP server URL, starter prompts, and test cases are entered there,
-and nothing in this repository is consumed by it. The following are properties of
-the deployed server and the portal draft, not of these files:
+The **With MCP** submission is a portal form, not a package upload. Listing text,
+logo, server URL, starter prompts and test cases are entered in the portal and
+nothing in this repository is consumed by it. Prerequisites live on the server
+and in the portal draft:
 
 - A domain-verification token served as plain text at
-  `https://mcp.autosheet.com/.well-known/openai-apps-challenge`, matching the
-  token the portal issues. The endpoint must return exactly that one token: no
-  JSON, no list, no multiple tokens.
-- A current, successful tool scan of the production endpoint, with explicit
-  `readOnlyHint`, `openWorldHint`, and `destructiveHint` values plus a
-  justification for each on every tool.
-- Reviewer-ready demo credentials, because the server uses OAuth.
-- A demo recording, exactly five positive and three negative test cases, and
-  release notes.
-- Apps Management write access and a verified individual or business identity in
-  the owning OpenAI organization.
+  `https://mcp.autosheet.com/.well-known/openai-apps-challenge` (currently 404),
+  returning exactly the one token the portal issues.
+- A successful tool scan of the production endpoint, with explicit `readOnlyHint`,
+  `openWorldHint` and `destructiveHint` values and a justification for each tool.
+- Reviewer demo credentials, since the server uses OAuth.
+- A demo recording, test cases (five positive and three negative), and release notes.
+- Apps Management write access and a verified identity in the owning OpenAI organization.
 
-## ChatGPT desktop and Codex
-
-Import the plugin archive through the supported plugin import flow for your
-workspace. Complete OAuth and start a new conversation with Autosheet enabled.
-Workspace policy may restrict imports.
-
-For a direct Codex connection without installing the plugin:
-
-```bash
-codex mcp add autosheet --url https://mcp.autosheet.com/mcp
-codex mcp login autosheet
-```
-
-## ChatGPT web
-
-An imported plugin declaring MCP servers in `.mcp.json` or `mcp.json` is currently
-desktop-only, including remote HTTPS servers. Publishing these files on GitHub
-does not by itself enable the plugin on ChatGPT web or publish a directory listing.
-See [OpenAI plugin management](https://learn.chatgpt.com/docs/enterprise/plugin-management).
-
-To test the server on ChatGPT web, enable developer mode in Settings → Security
-and login, open Plugins, select the plus button, and create a Server URL connection
-to `https://mcp.autosheet.com/mcp`. Complete OAuth, review the discovered tools, and
-test in a new chat. Availability depends on account and workspace policy.
-See [Connect and test](https://developers.openai.com/plugins/deploy/connect-chatgpt).
-
-To bind a plugin to that registered connection, obtain its actual `asdk_app_…`
-ID (remove the `plugin_` prefix from a `plugin_asdk_app_…` browser URL). Add an
-`.app.json` file containing an `apps` object with an `autosheet` entry whose `id`
-is that real ID and `required` is `true`. In the web package, replace the native
-manifest's `mcpServers` field with `apps: "./.app.json"` and exclude both raw MCP
-files and the alternative client manifests. Keep the native manifest.
-No `.app.json` is shipped here because a registered connection ID has not been
-provided. Do not invent an ID or commit a placeholder as a working connection.
-
-For public directory distribution, use OpenAI's **With MCP** submission route
-with the hosted endpoint. Complete the listing, authentication,
-tool scan, and review in the portal; a Claude approval does not transfer.
-See [Claude plugin migration](https://developers.openai.com/plugins/guides/submit-claude-plugin)
+Binding an imported plugin to a ChatGPT-web connection requires a registered
+connection ID (`asdk_app_…`) in an `.app.json` file; none is shipped because no
+ID exists yet. See [Connect and test](https://developers.openai.com/plugins/deploy/connect-chatgpt),
+[Claude plugin migration](https://developers.openai.com/plugins/guides/submit-claude-plugin)
 and [plugin packaging](https://developers.openai.com/plugins/build/plugins).
 
 ## Acceptance checks
 
-Package validation is separate from a successful authenticated ChatGPT session.
-Run the following against the deployed connection before announcing compatibility:
+Package validation is separate from a working authenticated session. Run these
+against the deployed connection before announcing compatibility for a client:
 
 1. Install or register the connection, finish OAuth, and verify tool discovery.
 2. On a test spreadsheet, request a small explicit change and verify the actual cells.
@@ -158,9 +210,7 @@ Run the following against the deployed connection before announcing compatibilit
 4. Exercise a longer job: `running` must lead to polling and a final outcome.
 5. Stop a running job and verify cancellation is reported accurately.
 6. Test an inaccessible spreadsheet and confirm a useful error instead of success.
-7. If the deployed server exposes tab copying, copy a test tab once and inspect it.
+7. Copy a test tab once and inspect it.
 
-Record the client, date, deployed tool list, and results. Refresh the ChatGPT
-developer connection after metadata changes and rerun affected checks in a new chat.
-Published plugins use reviewed metadata snapshots and require the publication
-update flow; live metadata-sheet edits alone do not update those snapshots.
+Record the client, date, deployed tool list, and results. After metadata changes,
+refresh the connection in the client and rerun the affected checks in a new chat.
