@@ -51,7 +51,7 @@ and moving the improved `interface` block into the upstream source.
    `.codex-plugin/plugin.json` for marketplace entries; Codex's loader accepts a
    root Agent Plugins manifest, but the importer is unverified. Push a scratch
    repo with the target layout and import it into ChatGPT and Codex. If the
-   importer rejects it, keep the build script's generated `.codex-plugin/plugin.json`
+   importer rejects it, have the build script generate a `.codex-plugin/plugin.json`
    out of git and add a marketplace entry with `"source": "url"` instead, or
    accept committing the native manifest and drop the §8 strictness.
 2. **Upstream:** change the publish script to emit `.claude-plugin/plugin.json`,
@@ -62,7 +62,7 @@ and moving the improved `interface` block into the upstream source.
 3. **Here, in the same release:** point both marketplace entries at `"./"`, delete
    `plugins/`, remove the transitional notes from this file and `AGENTS.md`, and
    rename the root package from `autosheet-mcp` to `autosheet` in `plugin.json`.
-4. **Verify:** `scripts/build-plugin-archives.py` still builds both archives; the
+4. **Verify:** `scripts/build-plugin-archives.py` still builds every archive; the
    Claude marketplace installs from `./` in a fresh Claude Code session; Codex
    installs from the marketplace and connects through `mcp.json`; run the
    [acceptance checks](#acceptance-checks) once per client.
@@ -72,7 +72,7 @@ and moving the improved `interface` block into the upstream source.
 | Client | Files read | How it gets the package |
 | --- | --- | --- |
 | Agent Plugins 1.0 clients: ChatGPT, Codex, VS Code, Cursor, GitHub Copilot, Kiro, Hermes, OpenClaw, Grok Bot, NanoClaw | `plugin.json`, `mcp.json` | Point the client at the repository root (or a clone of it) as a plugin, or install the portable ZIP built below |
-| ChatGPT workspace-admin import (`chatgpt.com/admin/plugins`) and local Codex marketplaces | generated `.codex-plugin/plugin.json` | Import the OpenAI ZIP built below through **Admin > Plugins** in ChatGPT, or add it to a local Codex marketplace. Imported plugins that declare MCP servers are **desktop-only**, including remote HTTPS servers, and workspace policy may restrict imports. This ZIP cannot go to the plugin portal: its only ZIP path is skills-only and rejects a package with `mcpServers`; the public directory goes through the **With MCP** form |
+| ChatGPT workspace-admin import (`chatgpt.com/admin/plugins`) and local Codex marketplaces | not the root package — they import `autosheet-plugin-<version>.zip`, built from `plugins/autosheet/` by the script below | ChatGPT marks any imported plugin that carries `.mcp.json` **desktop-only**; for web, reference a registered connection through `.app.json` instead. Neither ZIP goes to the plugin portal: its ZIP path is skills-only and rejects a package with `mcpServers`; the public directory goes through the **With MCP** form |
 
 Adding this repository as a marketplace, or importing it from GitHub, does **not**
 surface `autosheet-mcp`: both importers read the marketplace manifests, which list
@@ -102,7 +102,7 @@ direct connection and no package at all.
 | `plugin.json` | Agent Plugins 1.0 manifest. Carries the OpenAI listing block under `extensions.com.openai.interface` |
 | `mcp.json` | Agent Plugins 1.0 MCP configuration, `type: "streamable-http"` |
 | `LICENSE` | MIT, matching the `license` field |
-| `scripts/build-plugin-archives.py` | Builds both ZIPs and generates the OpenAI manifest; not part of either package |
+| `scripts/build-plugin-archives.py` | Builds one ZIP per destination (Claude, ChatGPT/Codex, Agent Plugins) and validates the root listing block; not part of any package |
 
 The Agent Plugins spec (§8) requires client-specific data to live under a
 reverse-domain namespace, either in `extensions` or in a top-level directory of
@@ -112,10 +112,10 @@ the root.
 
 Deliberately absent:
 
-- **No committed `.codex-plugin/plugin.json`.** The ChatGPT workspace-admin import
-  and Codex marketplaces need that file, so the build script generates it from
-  `plugin.json` and `mcp.json` into the archive. Committing it would break the §8 layout and duplicate the
-  listing block.
+- **No `.codex-plugin/plugin.json` at the root.** Codex reads the listing from `plugin.json`'s
+  `extensions.com.openai` block, so a native manifest here would only duplicate it
+  outside the reverse-domain layout. The ChatGPT/Codex ZIP is built from
+  `plugins/autosheet/`, which carries its own native manifest.
 - **No root `.mcp.json`.** Claude Code loads a repository-root `.mcp.json` as a
   project-scoped MCP server for everyone who opens the repo.
 - **No root `.claude-plugin/plugin.json` yet.** While `plugins/autosheet/` exists,
@@ -134,32 +134,36 @@ Deliberately absent:
 scripts/build-plugin-archives.py
 ```
 
-This writes two files to `dist/` (git-ignored), named with the version from
-`plugin.json`:
+One ZIP per destination, written to `dist/` (git-ignored). Each is built from the
+package that destination actually installs and named with that package's own
+manifest version, so a filename never claims a version its contents do not carry.
 
-| Archive | Contents | For |
-| --- | --- | --- |
-| `autosheet-agent-plugin-<version>.zip` | `plugin.json`, `mcp.json`, `LICENSE` | Agent Plugins 1.0 clients |
-| `autosheet-mcp-plugin-<version>.zip` | generated `.codex-plugin/plugin.json` + `.mcp.json`, `LICENSE` | ChatGPT workspace-admin import (`chatgpt.com/admin/plugins`) and local Codex marketplaces. Not the plugin portal: its ZIP path is skills-only and rejects a package with `mcpServers`; the public directory goes through the **With MCP** form |
+| Archive | Built from | Contents | For |
+| --- | --- | --- | --- |
+| `autosheet-claude-plugin-<v>.zip` | `plugins/autosheet/` | `.claude-plugin/plugin.json`, `.mcp.json`, `skills/` | Claude.ai / Claude Code plugin upload |
+| `autosheet-plugin-<v>.zip` | `plugins/autosheet/` | `.codex-plugin/plugin.json`, `.mcp.json`, `skills/` | ChatGPT workspace-admin import (`chatgpt.com/admin/plugins`), local Codex marketplaces — same artifact the v0.1.6 release shipped |
+| `autosheet-agent-plugin-<v>.zip` | repo root | `plugin.json`, `mcp.json`, `LICENSE` | Agent Plugins 1.0 clients (Cursor, VS Code, Copilot, Kiro, Codex) |
 
-The generated OpenAI manifest copies identity, author, license and keywords from
-`plugin.json`, converts the `mcp.json` server to `type: "http"` in a generated `.mcp.json`,
-points the manifest at it with `"mcpServers": "./.mcp.json"` (OpenAI's upload
-validator rejects an inline `mcpServers` object with *"mcpServers must be a string
-path for the root .mcp.json"*), and takes `interface` from `extensions.com.openai`. The script
-refuses to build if the listing text breaks the OpenAI limits below, so a bad edit
-fails locally instead of at import. Bump `version` in `plugin.json` for every
-release; Agent Plugins clients use it for update checks.
+Before writing anything the script validates the root listing block
+(`extensions.com.openai.interface`) against the OpenAI limits below and checks that
+both `plugins/autosheet/` manifests agree on their version, so a bad edit fails
+locally instead of at import. No native OpenAI manifest is generated for the root
+package: Codex reads the listing from `plugin.json` directly.
 
-Never archive the whole repository: `zip -r .` would bundle `plugins/autosheet/`
-and both marketplace manifests, producing two plugin roots under different names.
+Two limits of the ChatGPT ZIP that the script cannot remove: the plugin portal
+rejects it (its ZIP path is skills-only; the directory is the **With MCP** form), and
+a workspace-imported plugin that carries `.mcp.json` is **desktop-only** — to reach
+ChatGPT web, ship an `.app.json` that references a registered connection instead.
+
+Never archive the whole repository: `zip -r .` would bundle both packages and both
+marketplace manifests, producing two plugin roots under different names.
 
 ## Listing metadata constraints (package checks)
 
-OpenAI runs its shared package checks on the generated `.codex-plugin/plugin.json`
-when the package is imported through the ChatGPT workspace admin or a Codex
-marketplace. Limits that bind the current manifest (the build script checks the
-ones marked ✓):
+OpenAI runs its shared package checks on `.codex-plugin/plugin.json` whenever a plugin
+ZIP is imported through the ChatGPT workspace admin or a Codex marketplace. The same
+limits bind the root listing block in `plugin.json`, which the build script checks
+(the ones marked ✓):
 
 | Field | Rule |
 | --- | --- |
