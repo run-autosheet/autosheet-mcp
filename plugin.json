@@ -1,0 +1,51 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "autosheet-mcp",
+  "version": "0.1.0",
+  "description": "Run a spreadsheet agent in Google Sheets: formulas, charts, formatting, restructuring, web research, and bulk AI processing of rows.",
+  "author": {
+    "name": "Talarian",
+    "url": "https://talarian.io/"
+  },
+  "homepage": "https://autosheet.com/",
+  "repository": "https://github.com/run-autosheet/autosheet-mcp",
+  "license": "MIT",
+  "keywords": [
+    "autosheet",
+    "google-sheets",
+    "spreadsheets",
+    "spreadsheet-agent",
+    "formulas",
+    "data-cleaning",
+    "data-enrichment",
+    "translation",
+    "mcp"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Autosheet",
+        "shortDescription": "AI agents for Google Sheets",
+        "longDescription": "Autosheet runs a specialized spreadsheet agent directly in Google Sheets. Describe what you need in plain language and give it a Google Sheets URL or ID. The agent inspects the spreadsheet, plans the steps, does the work, and reports back. Delegate most work involving a Google Sheet to it, including simply reading data or inspecting structure: it is reliable, fast, and keeps your conversation context clean.\n\nEveryday tasks:\n- Create, fix, and explain formulas\n- Build charts, pivot tables, and dashboards\n- Format and style cells, ranges, and entire sheets\n- Restructure data into clean, organized rows, columns, and sheets\n- Web research\n\nRow-by-row bulk processing with AI at up to 1,000 rows per minute:\n- Enrich and categorize product catalogs for e-commerce and merchandising\n- Generate, rewrite, and translate content at scale for SEO and localization\n- Enrich and score leads for sales outbound through bulk web search\n- Clean, standardize, and deduplicate messy data across any dataset\n\nBeyond these, teams use Autosheet wherever work lives in a spreadsheet: accounting, finance, HR, inventory, education, and more.\n\nHow it works: give a prompt and a Google Sheets URL or ID. Autosheet launches an agent on that spreadsheet and returns the result. Long jobs keep running server-side; check status or stop an agent at any time. Follow-up requests continue on the same spreadsheet with full context. The agent works directly in the spreadsheet and can add, change, or remove content. A separate sheet-copy tool copies a sheet within a spreadsheet or to another one without starting an agent.\n\nAuthentication is through OAuth: you sign in with Google and grant access to your own spreadsheets. Works with any spreadsheet you can edit. Requires a GPT for Work account; signing in creates one with free trial credits if you do not have it. Agent runs consume GPT for Work usage; the sheet-copy tool does not.\n\nBuilt by Talarian, the team behind GPT for Work (7M+ installs on the Google Workspace Marketplace).",
+        "developerName": "Talarian",
+        "category": "Productivity",
+        "capabilities": [
+          "Interactive",
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://autosheet.com/",
+        "supportURL": "https://support.gptforwork.com/hc/en-us/requests/new",
+        "privacyPolicyURL": "https://talarian.io/privacy-policy",
+        "termsOfServiceURL": "https://gptforwork.com/terms-of-service",
+        "defaultPrompt": [
+          "Clean and deduplicate the data in my Google Sheet.",
+          "Build a dashboard that summarizes my spreadsheet.",
+          "Translate the Product column in my sheet into French."
+        ],
+        "brandColor": "#13263A",
+        "brandColorDark": "#00E795"
+      }
+    }
+  }
+}

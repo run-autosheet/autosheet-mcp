@@ -574,6 +574,8 @@ You do not need anything from this repository to use Autosheet MCP. Connecting a
 
 The MCP server source is not in this public repository and is not open source.
 
+For maintainers: the repository root also carries a standalone `autosheet-mcp` package in the portable Agent Plugins 1.0 format, from which the OpenAI ZIP package is generated. It is not installable through the marketplaces above. See [docs/plugin.md](docs/plugin.md).
+
 ## License
 
 [MIT](LICENSE)
