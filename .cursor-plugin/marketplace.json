@@ -1,0 +1,23 @@
+{
+  "name": "autosheet",
+  "owner": {
+    "name": "Autosheet"
+  },
+  "metadata": {
+    "description": "Official Autosheet plugin marketplace for Cursor",
+    "version": "0.1.6"
+  },
+  "plugins": [
+    {
+      "name": "autosheet",
+      "source": "./plugins/autosheet",
+      "description": "Run Autosheet AI agents against Google Sheets",
+      "version": "0.1.6",
+      "author": {
+        "name": "Autosheet"
+      },
+      "category": "productivity",
+      "homepage": "https://autosheet.com"
+    }
+  ]
+}
