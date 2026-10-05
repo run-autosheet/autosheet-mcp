@@ -8,13 +8,13 @@
       "name": "autosheet",
       "source": {
         "source": "local",
-        "path": "./plugins/autosheet"
+        "path": "./"
       },
       "policy": {
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "Productivity"
+      "category": "Data & Analytics"
     }
   ]
 }

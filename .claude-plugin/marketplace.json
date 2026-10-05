@@ -2,23 +2,23 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "autosheet",
   "owner": {
-    "name": "Autosheet"
+    "name": "Talarian"
   },
   "metadata": {
     "description": "Official Autosheet plugin marketplace for Claude Code",
-    "version": "0.1.6"
+    "version": "1.0.1"
   },
   "plugins": [
     {
       "name": "autosheet",
-      "source": "./plugins/autosheet",
-      "description": "Run Autosheet AI agents against Google Sheets from Claude Code",
-      "version": "0.1.6",
+      "source": "./",
+      "description": "Run a spreadsheet agent in Google Sheets: formulas, charts, formatting, restructuring, web research, and bulk AI processing of rows.",
+      "version": "1.0.1",
       "author": {
-        "name": "Autosheet"
+        "name": "Talarian"
       },
       "category": "productivity",
-      "homepage": "https://autosheet.com"
+      "homepage": "https://autosheet.com/"
     }
   ]
 }
