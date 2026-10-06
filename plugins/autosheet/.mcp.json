@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "autosheet": {
-      "type": "http",
-      "url": "https://mcp.autosheet.com/mcp"
-    }
-  }
-}
