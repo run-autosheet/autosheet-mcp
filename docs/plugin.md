@@ -18,6 +18,8 @@ from `./`. Archives for other clients are attached to each release on GitHub.
 │   └── marketplace.json         Codex marketplace, plugin source "./"
 ├── assets/                      listing icons
 ├── skills/                      shared by every client, when present
+├── docs/plugin.md               this file
+├── README.md
 └── LICENSE
 ```
 
