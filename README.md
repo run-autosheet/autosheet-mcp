@@ -197,7 +197,7 @@ Follow the instructions for your ChatGPT account type:
    Use Autosheet to summarize this spreadsheet and flag anything that looks off: <your sheet URL>
    ```
 
-You can now [use Autosheet in ChatGPT](#using-autosheet). Autosheet usage is billed to your GPT for Work account, separately from your ChatGPT subscription.
+You can now [use Autosheet in ChatGPT](#using-autosheet). Autosheet usage runs on your GPT for Work account. See [GPT for Work pricing](https://gptforwork.com/pricing) for current plans.
 
 #### ChatGPT organization account
 
