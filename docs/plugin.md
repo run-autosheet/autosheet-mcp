@@ -31,6 +31,5 @@ from `./`. Archives for other clients are attached to each release on GitHub.
 | Codex | `plugin.json`, `mcp.json`, `skills/` | The `autosheet` marketplace in this repository |
 | Other Agent Plugins 1.0 clients (VS Code, Cursor, GitHub Copilot, Kiro, …) | `plugin.json`, `mcp.json`, `skills/` | `autosheet-agent-plugin-<version>.zip` from the release. Don't point the client at the repository root, which also holds the marketplace manifests |
 
-For users who just want the server, the README covers
-[ChatGPT](../README.md#chatgpt) and the [Codex CLI](../README.md#codex-cli) with a
-direct connection and no package at all.
+The README covers installing [Autosheet from the ChatGPT plugin directory](../README.md#chatgpt)
+and connecting the [Codex CLI](../README.md#codex-cli) directly to the hosted server.

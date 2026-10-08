@@ -8,7 +8,7 @@ The server is hosted at:
 https://mcp.autosheet.com/mcp
 ```
 
-You set up Autosheet MCP by connecting directly to the hosted server. This works in every client covered below and gives you [all the Autosheet MCP tools](#mcp-tools).
+In ChatGPT, install [Autosheet from the plugin directory](https://chatgpt.com/plugins/plugin_asdk_app_6aa196d5c8488191a3de00c74c9534ac). Other clients can connect to the hosted server using the instructions below. Both routes give you [all the Autosheet MCP tools](#mcp-tools).
 
 Dedicated setup instructions are provided for [Claude](#claude), [Claude Code CLI](#claude-code-cli), [ChatGPT](#chatgpt), and [Codex CLI](#codex-cli). You can also use [any other MCP client](#other-compatible-mcp-clients) that supports remote servers over Streamable HTTP with OAuth.
 
@@ -178,127 +178,34 @@ You can now [use Autosheet in the Claude Code CLI](#using-autosheet).
 
 ### ChatGPT
 
+Install [Autosheet from the ChatGPT plugin directory](https://chatgpt.com/plugins/plugin_asdk_app_6aa196d5c8488191a3de00c74c9534ac). You do not need Developer mode or a custom MCP connection for the directory plugin.
+
 Follow the instructions for your ChatGPT account type:
 
-- [Personal account](#chatgpt-personal-account) — Plus or Pro plan
-
-- [Organization account](#chatgpt-organization-account) — Part of a team workspace
+- [Personal account](#chatgpt-personal-account)
+- [Organization account](#chatgpt-organization-account) — Part of a managed workspace
 
 #### ChatGPT personal account
 
-You connect ChatGPT to Autosheet MCP by creating a custom plugin. You need to enable developer mode to create and use custom plugins.
+1. Open [Autosheet in the ChatGPT plugin directory](https://chatgpt.com/plugins/plugin_asdk_app_6aa196d5c8488191a3de00c74c9534ac) and follow the instructions to install it. You can also open **Plugins** in ChatGPT and search for **Autosheet**.
 
-> **NOTE**
->
-> The Free and Go plans do not support developer mode, so you cannot currently use Autosheet with them.
+1. Sign in with Google when prompted. Use the Google account that has edit access to the spreadsheets you want Autosheet to work on. Authentication may happen during installation or the first time you use the plugin.
 
-To connect ChatGPT to Autosheet MCP:
+1. Start a new chat and ask ChatGPT to use Autosheet with a Google Sheets URL and your instructions. For example:
 
-1. Open ChatGPT in your browser.
+   ```text
+   Use Autosheet to summarize this spreadsheet and flag anything that looks off: <your sheet URL>
+   ```
 
-1. Enable developer mode:
-
-   1. In the main sidebar, click your user name and select **Settings**.
-
-   1. In the settings sidebar, select **Security and login**.
-
-   1. In the **Developer mode** section, enable **Developer mode**.
-
-1. Create the plugin:
-
-   1. In the main sidebar, select **Plugins**.
-
-   1. At the top of the panel, click the **+** button.
-
-   1. Define the plugin settings:
-
-      - **Name**: Enter `Autosheet`.
-
-      - **Connection**: Select **Server URL** and enter `https://mcp.autosheet.com/mcp`.
-
-      - Leave the other settings at their defaults.
-
-      - Check **I understand and want to continue**.
-
-   1. Click **Create**.
-
-   1. Follow the on-screen instructions to authenticate to Autosheet MCP.
-
-You can now [use Autosheet in ChatGPT](#using-autosheet).
+You can now [use Autosheet in ChatGPT](#using-autosheet). Autosheet usage is billed to your GPT for Work account, separately from your ChatGPT subscription.
 
 #### ChatGPT organization account
 
-A workspace admin or owner must first create and publish a custom app for Autosheet MCP. To create and publish custom apps, developer mode must be enabled. Once the app is published, workspace members can individually install the app and authenticate to Autosheet MCP.
+Open the [Autosheet directory listing](https://chatgpt.com/plugins/plugin_asdk_app_6aa196d5c8488191a3de00c74c9534ac) while signed in to the ChatGPT workspace where you want to use it, then follow the [installation steps above](#chatgpt-personal-account).
 
-##### Create the Autosheet app for your ChatGPT workspace
+Your workspace's plugin settings control whether you can install and use Autosheet. If access is restricted, ask your workspace admin to make the listed plugin available. You do not need to create and publish a custom Autosheet app for the directory installation.
 
-If you're a workspace admin or owner:
-
-1. Open ChatGPT in your browser.
-
-1. Enable developer mode:
-
-   1. In the main sidebar, click your user name and select **Settings**.
-
-   1. In the settings sidebar, select **Security and login**.
-
-   1. In the **Developer mode** section, enable **Developer mode**.
-
-1. Create the app:
-
-   1. In the main sidebar, click your user name and select **Workspace settings**.
-
-   1. In the workspace settings sidebar, select **Apps**.
-
-   1. Click **Create**.
-
-   1. Define the app settings:
-
-      - **Name**: Enter `Autosheet`.
-
-      - **Connection**: Select **Server URL** and enter `https://mcp.autosheet.com/mcp`.
-
-      - Leave the other settings at their defaults.
-
-      - Check **I understand and want to continue**.
-
-   1. Click **Create**. The app appears in the **Drafts** tab on the **Apps** page.
-
-1. Publish the app:
-
-   1. Click **Publish** for **Autosheet**.
-
-   1. Select **Review potential risk: Unauthorized data access**, and check **I understand**.
-
-   1. Select **Review potential risk: Malicious app**, and check **I trust this app** and the parameter review statement.
-
-   1. Click **Publish**.
-
-The Autosheet app is now available to your workspace members.
-
-> **NOTE**
->
-> If you want to connect ChatGPT to Autosheet MCP for your own account, keep developer mode enabled and follow the instructions below.
-
-##### Connect ChatGPT to Autosheet MCP
-
-> **NOTE**
->
-> In the ChatGPT user settings, apps and plugins are both called "plugins".
-
-If you're a workspace member:
-
-1. Open ChatGPT in your browser.
-
-1. In the main sidebar, select **Plugins**.
-
-1. Search for `Autosheet`.
-
-1. Click the **+** button for **Autosheet**.
-
-1. Follow the on-screen instructions to authenticate to Autosheet MCP.
-
-You can now [use Autosheet in ChatGPT](#using-autosheet).
+For the current installation flow and workspace controls, see [OpenAI's plugin documentation](https://learn.chatgpt.com/docs/plugins).
 
 ### Codex CLI
 
