@@ -8,9 +8,17 @@ The server is hosted at:
 https://mcp.autosheet.com/mcp
 ```
 
-In ChatGPT, install [Autosheet from the plugin directory](https://chatgpt.com/plugins/plugin_asdk_app_6aa196d5c8488191a3de00c74c9534ac). Other clients can connect to the hosted server using the instructions below. Both routes give you [all the Autosheet MCP tools](#mcp-tools).
+Depending on your client, you either install Autosheet from the client's directory or manually add the server URL to your client. Either way, you get [all the Autosheet MCP tools](#mcp-tools). For detailed instructions, see:
 
-Dedicated setup instructions are provided for [Claude](#claude), [Claude Code CLI](#claude-code-cli), [ChatGPT](#chatgpt), and [Codex CLI](#codex-cli). You can also use [any other MCP client](#other-compatible-mcp-clients) that supports remote servers over Streamable HTTP with OAuth.
+- [ChatGPT](#chatgpt)
+
+- [Codex CLI](#codex-cli)
+
+- [Claude](#claude)
+
+- [Claude Code CLI](#claude-code-cli)
+
+- [Other MCP clients](#other-compatible-mcp-clients) that support remote servers over Streamable HTTP with OAuth
 
 ## MCP tools
 
@@ -46,13 +54,147 @@ To use Autosheet MCP you need:
 
 - **Access to the Google Sheets spreadsheets you want Autosheet to work on.** The spreadsheet agent requires edit access. The sheet-copy tool requires read access to the source and edit access to the destination. Autosheet accesses spreadsheets through your Google account.
 
-**Signing in.** Your client authenticates to Autosheet MCP with OAuth. Autosheet opens a browser window for Google sign-in when authentication is required, typically on the first tool call. Your client stores the authentication credentials and reuses them for subsequent tool calls.
+**Signing in.** Your client authenticates to Autosheet MCP with OAuth. Autosheet opens a browser window for Google sign-in when authentication is required. Your client stores the authentication credentials and reuses them for subsequent tool calls.
 
 > **TIP**
 >
 > The sign-in process creates an Autosheet API key. The key is how Autosheet MCP identifies you, so the agent can reach the spreadsheets your Google account can edit. You can manage the key in the [GPT for Work dashboard](https://dashboard.gptforwork.com/).
 
+### ChatGPT
+
+Install the [Autosheet plugin from the ChatGPT plugins directory](https://chatgpt.com/plugins/plugin_asdk_app_6aa196d5c8488191a3de00c74c9534ac). Installing the plugin makes Autosheet available in ChatGPT and Codex, including the Codex CLI.
+
+Follow the instructions for your ChatGPT account type:
+
+- [Personal account](#chatgpt-personal-account)
+
+- [Organization account](#chatgpt-organization-account) — Part of a managed workspace
+
+#### ChatGPT personal account
+
+1. Sign in to ChatGPT in your browser or in the ChatGPT desktop app.
+
+   If you're in the browser, you can go directly to the [Autosheet plugin's directory listing](https://chatgpt.com/plugins/plugin_asdk_app_6aa196d5c8488191a3de00c74c9534ac), click **Install plugin**, and continue from step 5.
+
+1. In the sidebar, select **Plugins**.
+
+1. Search for `Autosheet`.
+
+1. Click the **+** button for **Autosheet**. In the ChatGPT desktop app, click **Install** instead.
+
+   ![Select the Autosheet plugin in ChatGPT](docs/images/chatgpt-plugins-autosheet-select.png)
+
+1. Click **Continue to Autosheet**.
+
+   ![Connect ChatGPT to Autosheet MCP](docs/images/chatgpt-plugins-autosheet-connect.png)
+
+1. Follow the on-screen instructions to authenticate to Autosheet MCP with your Google account.
+
+You can now [use Autosheet](#using-autosheet) in ChatGPT as well as in Codex, including the Codex CLI.
+
+#### ChatGPT organization account
+
+A workspace admin or owner must first make the Autosheet plugin available to workspace members. Once the plugin is available, members can individually connect to Autosheet MCP.
+
+##### Add the Autosheet plugin to your ChatGPT workspace
+
+If you're a workspace admin or owner:
+
+1. Sign in to the [OpenAI Admin Console](https://admin.openai.com/).
+
+1. In the sidebar, select **Plugins**.
+
+1. Search for `Autosheet`.
+
+1. In the public search results, select **Autosheet**.
+
+   ![Select the Autosheet plugin in the OpenAI Admin Console](docs/images/openai-admin-console-plugins-autosheet-select.png)
+
+1. Click **Enable**.
+
+   ![Enable the Autosheet plugin in the OpenAI Admin Console](docs/images/openai-admin-console-plugins-autosheet-enable.png)
+
+1. In the **Availability** section, select how you want to make the Autosheet plugin available to your workspace members:
+
+   - **Available**: Members can search for and install the plugin if they want to use Autosheet.
+
+   - **Installed**: Members have the plugin preinstalled, but they still need to authenticate before they can use Autosheet.
+
+1. Check and configure the other plugin settings. For more information, see the [OpenAI documentation](https://learn.chatgpt.com/docs/enterprise/apps-and-connectors).
+
+The Autosheet plugin is now available to your workspace members. To connect to Autosheet MCP, members can follow the instructions in [Connect ChatGPT to Autosheet MCP](#connect-chatgpt-to-autosheet-mcp).
+
+##### Connect ChatGPT to Autosheet MCP
+
+- If the Autosheet plugin is not available in your workspace, ask your workspace admin or owner to add it. They can follow the instructions in [Add the Autosheet plugin to your ChatGPT workspace](#add-the-autosheet-plugin-to-your-chatgpt-workspace).
+
+- If the Autosheet plugin is available but not preinstalled in your workspace, follow the instructions in [ChatGPT personal account](#chatgpt-personal-account).
+
+- If the Autosheet plugin is preinstalled in your workspace:
+
+  1. Sign in to ChatGPT in your browser or in the ChatGPT desktop app.
+
+     If you're in the browser, you can go directly to the [Autosheet plugin's directory listing](https://chatgpt.com/plugins/plugin_asdk_app_6aa196d5c8488191a3de00c74c9534ac), click **Manage**, and continue from step 5.
+
+  1. In the sidebar, select **Plugins**.
+
+  1. Under **Installed**, select **Autosheet**.
+
+  1. Click **Manage**.
+
+     ![Manage the Autosheet plugin in ChatGPT](docs/images/chatgpt-plugins-autosheet-manage.png)
+
+  1. Click **Connect**.
+
+  1. Click **Continue to Autosheet**.
+
+     ![Connect ChatGPT to Autosheet MCP](docs/images/chatgpt-plugins-autosheet-connect.png)
+
+  1. Follow the on-screen instructions to authenticate to Autosheet MCP with your Google account.
+
+You can now [use Autosheet](#using-autosheet) in ChatGPT as well as in Codex, including the Codex CLI.
+
+### Codex CLI
+
+> **NOTE**
+>
+> If you already have [ChatGPT connected to Autosheet MCP](#chatgpt), the Codex CLI is also connected — provided you're signed in to the CLI with the same ChatGPT user account. If not, connecting the CLI also connects ChatGPT and the rest of Codex to Autosheet MCP.
+
+1. Open the Codex CLI in your terminal.
+
+1. Enter `/plugins`. Codex lists all available plugins.
+
+1. Enter `Autosheet` to filter the list.
+
+1. In the list, select **Autosheet**.
+
+1. Select **Install plugin**.
+
+1. Select **Install on ChatGPT**. ChatGPT opens in your browser.
+
+   If you have an organization account and Codex does not show **Install on ChatGPT**, Autosheet is not available in your ChatGPT workspace. Select **Uninstall plugin**, and ask your workspace admin or owner to add Autosheet. They can follow the instructions in [Add the Autosheet plugin to your ChatGPT workspace](#add-the-autosheet-plugin-to-your-chatgpt-workspace).
+
+1. Sign in to ChatGPT.
+
+1. Click **Manage**.
+
+   ![Manage the Autosheet plugin in ChatGPT](docs/images/chatgpt-plugins-autosheet-manage.png)
+
+1. Click **Connect**.
+
+1. Click **Continue to Autosheet**.
+
+   ![Connect ChatGPT to Autosheet MCP](docs/images/chatgpt-plugins-autosheet-connect.png)
+
+1. Follow the on-screen instructions to authenticate to Autosheet MCP with your Google account.
+
+1. Back in the Codex CLI, select **I've installed it**.
+
+You can now [use Autosheet](#using-autosheet) in the Codex CLI as well as in ChatGPT and the rest of Codex.
+
 ### Claude
+
+Install the [Autosheet connector from the Claude connectors directory](https://claude.ai/directory/connectors/autosheet). Installing the connector makes Autosheet available in Claude and Claude Code.
 
 Follow the instructions for your Claude account type:
 
@@ -62,31 +204,27 @@ Follow the instructions for your Claude account type:
 
 #### Claude personal account
 
-To connect Claude to Autosheet MCP:
-
 1. Open Claude in your browser or in the Claude desktop app.
 
-   If you're in the browser, you can go directly to the [Autosheet connector's directory listing](https://claude.ai/directory/connectors/autosheet) and continue from step 7.
+   If you're in the browser, you can go directly to the [Autosheet connector's directory listing](https://claude.ai/directory/connectors/autosheet) and continue from step 6.
 
 1. In the main sidebar, click your user name and select **Settings**.
 
 1. In the settings sidebar, select **Customize > Connectors**.
 
-1. Click **Add > Browse connectors**.
-
 1. Search for `Autosheet`.
 
-1. Click the **+** button for **Autosheet**.
+1. Select **Autosheet**.
 
    ![Select the Autosheet connector](docs/images/claude-connectors-autosheet-select.png)
 
-1. Click **Connect**.
+1. Click **Connect to Claude**.
 
    ![Connect Claude to Autosheet MCP](docs/images/claude-connectors-autosheet-connect.png)
 
 1. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
-You can now [use Autosheet in Claude](#using-autosheet).
+You can now [use Autosheet](#using-autosheet) in Claude.
 
 #### Claude organization account
 
@@ -100,7 +238,7 @@ If you're an organization owner:
 
 1. In the main sidebar, click your user name and select **Organization settings**.
 
-1. In the settings sidebar, select **Libraries & Access > Connectors**.
+1. In the settings sidebar, select **Plugins > Connectors**.
 
 1. Click **Add > All available**.
 
@@ -108,25 +246,21 @@ If you're an organization owner:
 
 1. Click the **+** button for **Autosheet**.
 
-   ![Select the Autosheet connector](docs/images/claude-connectors-autosheet-select.png)
+   ![Select the Autosheet connector](docs/images/claude-connectors-autosheet-admin-add.png)
 
-1. Click **Add to your team**.
+1. Click **Connect for your team**.
 
-   ![Enable the Autosheet connector for your team](docs/images/claude-connectors-autosheet-team-add.png)
+   ![Enable the Autosheet connector for your team](docs/images/claude-connectors-autosheet-admin-connect.png)
 
 1. (Optional) To modify the tool permission restrictions for your organization:
 
-   1. Select the **Configuration** tab and click **Connect**.
-
-   1. Follow the on-screen instructions to authenticate to Autosheet MCP.
+   1. Select the **Tools** tab.
 
    1. Check the permission restrictions and adjust them as needed.
 
 The Autosheet connector is now available to your organization members.
 
 ##### Connect Claude to Autosheet MCP
-
-If you're an organization member:
 
 1. Open Claude in your browser or in the Claude desktop app.
 
@@ -138,7 +272,7 @@ If you're an organization member:
 
 1. Click **Connect** for **Autosheet**.
 
-   ![Connect Claude to Autosheet MCP](docs/images/claude-connectors-autosheet-team-connect.png)
+   ![Connect Claude to Autosheet MCP](docs/images/claude-connectors-autosheet-member-connect.png)
 
 1. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
@@ -148,15 +282,13 @@ If you're an organization member:
 
    1. In the **Tool permissions** section, check the permissions and adjust them as needed.
 
-You can now [use Autosheet in Claude](#using-autosheet).
+You can now [use Autosheet](#using-autosheet) in Claude.
 
 ### Claude Code CLI
 
 > **NOTE**
 >
-> If you already have [Claude connected to Autosheet MCP](#claude), the Claude Code CLI is also connected — provided you're signed in to the CLI with the same Claude user account. If you cannot or do not want to connect Claude to Autosheet MCP, follow the instructions below for the CLI.
-
-To connect the Claude Code CLI to Autosheet MCP:
+> If you already have [Claude connected to Autosheet MCP](#claude), the Claude Code CLI is also connected — provided you're signed in to the CLI with the same Claude user account.
 
 1. Open your terminal and run the following command:
 
@@ -174,73 +306,7 @@ To connect the Claude Code CLI to Autosheet MCP:
 
 1. Run `/mcp`, select `autosheet`, and select `Authenticate`. Follow the on-screen instructions to authenticate to Autosheet MCP.
 
-You can now [use Autosheet in the Claude Code CLI](#using-autosheet).
-
-### ChatGPT
-
-Install [Autosheet from the ChatGPT plugin directory](https://chatgpt.com/plugins/plugin_asdk_app_6aa196d5c8488191a3de00c74c9534ac). You do not need Developer mode or a custom MCP connection for the directory plugin.
-
-Follow the instructions for your ChatGPT account type:
-
-- [Personal account](#chatgpt-personal-account)
-- [Organization account](#chatgpt-organization-account) — Part of a managed workspace
-
-#### ChatGPT personal account
-
-1. Open [Autosheet in the ChatGPT plugin directory](https://chatgpt.com/plugins/plugin_asdk_app_6aa196d5c8488191a3de00c74c9534ac) and follow the instructions to install it. You can also open **Plugins** in ChatGPT and search for **Autosheet**.
-
-1. Sign in with Google when prompted. Use the Google account that has edit access to the spreadsheets you want Autosheet to work on. Authentication may happen during installation or the first time you use the plugin.
-
-1. Start a new chat and ask ChatGPT to use Autosheet with a Google Sheets URL and your instructions. For example:
-
-   ```text
-   Use Autosheet to summarize this spreadsheet and flag anything that looks off: <your sheet URL>
-   ```
-
-You can now [use Autosheet in ChatGPT](#using-autosheet). Autosheet usage runs on your GPT for Work account. See [GPT for Work pricing](https://gptforwork.com/pricing) for current plans.
-
-#### ChatGPT organization account
-
-Open the [Autosheet directory listing](https://chatgpt.com/plugins/plugin_asdk_app_6aa196d5c8488191a3de00c74c9534ac) while signed in to the ChatGPT workspace where you want to use it, then follow the [installation steps above](#chatgpt-personal-account).
-
-Your workspace's plugin settings control whether you can install and use Autosheet. If access is restricted, ask your workspace admin to make the listed plugin available. You do not need to create and publish a custom Autosheet app for the directory installation.
-
-For the current installation flow and workspace controls, see [OpenAI's plugin documentation](https://learn.chatgpt.com/docs/plugins).
-
-### Codex CLI
-
-To connect the Codex CLI to Autosheet MCP:
-
-1. Open your terminal and run the following command:
-
-   ```bash
-   codex mcp add autosheet --url https://mcp.autosheet.com/mcp
-   ```
-
-1. Follow the on-screen instructions to authenticate to Autosheet MCP.
-
-You can now [use Autosheet in the Codex CLI](#using-autosheet).
-
-> **TIP**
->
-> The above command enables Autosheet for all projects. If you instead want to enable Autosheet only for a specific project:
->
-> 1. Open `<project>/.codex/config.toml` in an editor and add the following configuration:
->
->    ```toml
->    [mcp_servers.autosheet]
->    url = "https://mcp.autosheet.com/mcp"
->    ```
->
-> 1. Save the file.
->
-> 1. Open your terminal, change to the project directory, and run the following command:
->
->    ```bash
->    codex mcp login autosheet
->    ```
->
-> 1. Follow the on-screen instructions to authenticate to Autosheet MCP.
+You can now [use Autosheet](#using-autosheet) in the Claude Code CLI.
 
 ### Other compatible MCP clients
 
@@ -291,7 +357,7 @@ Autosheet combines a spreadsheet agent with a direct sheet-copy tool. The agent 
 
 #### Copying a sheet
 
-Copy one sheet within the same spreadsheet or into another spreadsheet without starting an agent. The tool keeps values, formulas, formatting, notes, and embedded charts. It appends the copy as the last sheet in the destination. Google gives the new sheet a title that starts with `Copy of ` followed by the original title. References can break when the destination does not contain other sheets that the copied sheet refers to.
+Copy one sheet within the same spreadsheet or into another spreadsheet without starting an agent. The tool keeps values, formulas, formatting, notes, and embedded charts. It appends the copy as the last sheet in the destination. Google gives the new sheet a title that starts with `Copy of` followed by the original title. References can break when the destination does not contain other sheets that the copied sheet refers to.
 
 ```text
 Copy the Q3 Pipeline sheet from this spreadsheet: <spreadsheet-url>
@@ -386,13 +452,13 @@ Research current industry benchmarks for SaaS churn and add them to a new Benchm
 
 ## Platforms and compatibility
 
-| Client | Tested | Direct connection | Restrictions to know |
-| --- | --- | --- | --- |
-| Claude | Yes | Yes | Organization accounts: An owner must first make the Autosheet connector available. |
-| Claude Code CLI | Yes | Yes | None |
-| ChatGPT | Yes | Yes | Developer mode must be enabled for the Autosheet app/plugin creator. Organization accounts: An admin or owner must first make an Autosheet app available. |
-| Codex CLI | Yes | Yes | None |
-| Other MCP clients | No | Yes, if the client supports Streamable HTTP with OAuth | Untested. Follow your client's own documentation. |
+| Client | Tested | Restrictions to know |
+| --- | --- | --- |
+| ChatGPT | Yes | Organization accounts: An admin or owner must first make the Autosheet plugin available. |
+| Codex CLI | Yes | Organization accounts: An admin or owner must first make the Autosheet plugin available. |
+| Claude | Yes | Organization accounts: An owner must first make the Autosheet connector available. |
+| Claude Code CLI | Yes | None |
+| Other MCP clients | No | Untested. Follow your client's own documentation. |
 
 Every client needs Streamable HTTP support and OAuth to connect.
 
@@ -417,9 +483,11 @@ The sheet-copy tool copies sheets, not spreadsheet files. See [Copying a sheet](
 
 ## Troubleshooting
 
-**Sign-in fails, or the client says Autosheet needs authentication.** Run your client's sign-in step rather than retrying the spreadsheet request: `/mcp` in the Claude Code CLI, `codex mcp login autosheet` in your terminal. In Claude and ChatGPT, the browser sign-in starts from the first tool call. If sign-in succeeds but the client still reports a problem, start a new session or chat and try again.
+**Sign-in fails, or the client says Autosheet needs authentication.** Run your client's sign-in step rather than retrying the spreadsheet request. In ChatGPT and Claude, sign in again from the plugin's or connector's settings. This also covers Codex and Claude Code when they're connected through ChatGPT or Claude. If sign-in succeeds but the client still reports a problem, start a new session or chat and try again.
 
-**Browser sign-in in a terminal, a remote session, or a headless environment.** Sign-in needs a browser on the machine running the client. In the Codex CLI, `mcp_oauth_callback_port` and `mcp_oauth_callback_url` let you control the callback so it can reach a remote machine.
+**Browser sign-in in a terminal, a remote session, or a headless environment.** In the Codex CLI, connect the Autosheet plugin in ChatGPT on any device, and then select **I've installed it** in the CLI. In the Claude Code CLI, connect the Autosheet connector in Claude on any device, and then start a new CLI session. Signing in from the CLI itself with `/mcp` needs a browser on the machine running the CLI.
+
+**The Codex CLI shows Autosheet as installed, but every request fails because Autosheet MCP is not connected.** The plugin was installed in the CLI without a ChatGPT connection. This happens when Autosheet is not available in your ChatGPT workspace. Uninstall the plugin in `/plugins`, ask your workspace admin or owner to [add Autosheet to your workspace](#add-the-autosheet-plugin-to-your-chatgpt-workspace), and then [install it again](#codex-cli).
 
 **Claude cannot reach the server, but your network can.** Remote connectors are brokered from Anthropic's servers, not from your machine. This is true in Claude Desktop and in Cowork as well. A firewall rule or VPN on your own machine is therefore not the cause, and allowing the address locally will not change the result.
 
@@ -477,11 +545,11 @@ To report a bug in this documentation, open an issue on this repository.
 
 This repository is the canonical documentation for Autosheet MCP.
 
-You do not need anything from this repository to use Autosheet MCP. Connecting a client directly to `https://mcp.autosheet.com/mcp` is enough, and there is no server for you to install or run.
+You do not need anything from this repository to use Autosheet MCP. There is no server for you to install or run.
 
 The MCP server source is not in this public repository and is not open source.
 
-The repository root is also the `autosheet` plugin package that the Claude Code and Codex marketplaces above install, in the portable Agent Plugins 1.0 format. See [docs/plugin.md](docs/plugin.md).
+The repository root is also the `autosheet` plugin package that this repository's Claude Code and Codex marketplaces install, in the portable Agent Plugins 1.0 format. See [docs/plugin.md](docs/plugin.md).
 
 ## License
 

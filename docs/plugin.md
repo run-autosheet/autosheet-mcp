@@ -1,9 +1,6 @@
 # Autosheet plugin package
 
-The repository root is the plugin package `autosheet` for the hosted MCP endpoint
-`https://mcp.autosheet.com/mcp`. The Claude Code and Codex marketplaces
-(`.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`) install it
-from `./`. Archives for other clients are attached to each release on GitHub.
+The repository root is the plugin package `autosheet` for the hosted MCP endpoint `https://mcp.autosheet.com/mcp`. The Claude Code and Codex marketplaces (`.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`) install it from `./`. Archives for other clients are attached to each release on GitHub.
 
 ## Layout
 
@@ -31,5 +28,4 @@ from `./`. Archives for other clients are attached to each release on GitHub.
 | Codex | `plugin.json`, `mcp.json`, `skills/` | The `autosheet` marketplace in this repository |
 | Other Agent Plugins 1.0 clients (VS Code, Cursor, GitHub Copilot, Kiro, …) | `plugin.json`, `mcp.json`, `skills/` | `autosheet-agent-plugin-<version>.zip` from the release. Don't point the client at the repository root, which also holds the marketplace manifests |
 
-The README covers installing [Autosheet from the ChatGPT plugin directory](../README.md#chatgpt)
-and connecting the [Codex CLI](../README.md#codex-cli) directly to the hosted server.
+For end-user setup in any client, see the [README](../README.md).
