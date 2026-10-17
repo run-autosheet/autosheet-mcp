@@ -6,18 +6,18 @@
   },
   "metadata": {
     "description": "Official Autosheet plugin marketplace for Claude Code",
-    "version": "1.0.1"
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "autosheet",
       "source": "./",
-      "description": "Run a spreadsheet agent in Google Sheets: formulas, charts, formatting, restructuring, web research, and bulk AI processing of rows.",
-      "version": "1.0.1",
+      "description": "Work in Google Sheets with an agent: from everyday spreadsheet work (formulas, formatting, data cleanup, restructuring, charts, pivots) to multi-step large-scale workflows involving bulk processing with AI and web search (content generation, categorization, translation, enrichment, extraction, scoring) as well as consolidating sheets from multiple spreadsheets.",
+      "version": "1.1.0",
       "author": {
         "name": "Talarian"
       },
-      "category": "productivity",
+      "category": "Data & Analytics",
       "homepage": "https://autosheet.com/"
     }
   ]
