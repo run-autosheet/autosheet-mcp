@@ -1,6 +1,8 @@
-# Autosheet MCP
+# Autosheet
 
-Autosheet MCP is the hosted remote MCP server for [Autosheet](https://autosheet.com/), the spreadsheet agent that powers [GPT for Sheets](https://gptforwork.com/docs/gpt-for-sheets). The server lets compatible MCP clients run the agent and use direct spreadsheet utilities in your existing spreadsheets.
+[Autosheet](https://autosheet.com/) is a spreadsheet agent for Google Sheets, the same agent that powers [GPT for Sheets](https://gptforwork.com/docs/gpt-for-sheets). Give your AI assistant a prompt and a Google Sheets URL, and the agent works directly in the spreadsheet: it writes and fixes formulas, builds charts and pivot tables, cleans up and restructures data, researches on the web, and processes rows in bulk with AI at up to 1,000 rows per minute.
+
+This repository holds the Autosheet plugin for Claude, Claude Code, ChatGPT, and Codex, which bundles a Google Sheets skill and connects to Autosheet MCP, the hosted remote MCP server. Any compatible MCP client can also connect to the server directly.
 
 The server is hosted at:
 
