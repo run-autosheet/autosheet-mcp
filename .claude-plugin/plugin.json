@@ -1,26 +1,38 @@
 {
   "name": "autosheet",
-  "version": "1.0.1",
-  "description": "Run a spreadsheet agent in Google Sheets: formulas, charts, formatting, restructuring, web research, and bulk AI processing of rows.",
+  "displayName": "Autosheet",
+  "version": "1.1.0",
+  "description": "Work in Google Sheets with an agent: from everyday spreadsheet work (formulas, formatting, data cleanup, restructuring, charts, pivots) to multi-step large-scale workflows involving bulk processing with AI and web search (content generation, categorization, translation, enrichment, extraction, scoring) as well as consolidating sheets from multiple spreadsheets.",
   "author": {
     "name": "Talarian",
     "url": "https://talarian.io/"
   },
   "homepage": "https://autosheet.com/",
   "repository": "https://github.com/run-autosheet/autosheet-mcp",
-  "license": "MIT",
+  "license": "LicenseRef-Talarian-Work",
   "keywords": [
     "autosheet",
     "google-sheets",
     "spreadsheets",
     "spreadsheet-agent",
     "formulas",
+    "charts",
+    "pivot-tables",
+    "data-analysis",
     "data-cleaning",
     "data-enrichment",
+    "bulk-processing",
+    "web-research",
     "translation",
+    "spreadsheet-consolidation",
     "mcp"
   ],
+  "icon": "./assets/logo.png",
+  "documentationUrl": "https://github.com/run-autosheet/autosheet-mcp",
+  "supportUrl": "https://support.gptforwork.com/hc/en-us/requests/new",
   "privacyPolicyUrl": "https://talarian.io/privacy-policy",
+  "termsOfServiceUrl": "https://autosheet.com/terms",
+  "skills": "./skills/",
   "mcpServers": {
     "autosheet": {
       "type": "http",
