@@ -1,7 +1,7 @@
 <!-- autosheet-intro:start -->
 # Autosheet
 
-[Autosheet](https://autosheet.com/) is a spreadsheet agent for Google Sheets, the same agent that powers [GPT for Sheets](https://gptforwork.com/docs/gpt-for-sheets). Give your AI assistant a prompt and a Google Sheets URL, and the agent works directly in the spreadsheet: it writes and fixes formulas, builds charts and pivot tables, cleans up and restructures data, researches on the web, and processes rows in bulk with AI at up to 1,000 rows per minute.
+[Autosheet](https://autosheet.com/) is a spreadsheet agent for Google Sheets, the same agent that powers [GPT for Sheets](https://autosheet.com/docs/gpt-for-sheets). Give your AI assistant a prompt and a Google Sheets URL, and the agent works directly in the spreadsheet: it writes and fixes formulas, builds charts and pivot tables, cleans up and restructures data, researches on the web, and processes rows in bulk with AI at up to 1,000 rows per minute.
 
 This repository holds the Autosheet plugin for Claude, Claude Code, ChatGPT, and Codex, which bundles a Google Sheets skill and connects to Autosheet MCP, the hosted remote MCP server. Any compatible MCP client can also connect to the server directly.
 <!-- autosheet-intro:end -->
@@ -28,7 +28,7 @@ Depending on your client, you either install Autosheet from the client's directo
 
 ## Plugin package
 
-**Version:** `1.1.0` · **License:** [Talarian Work License](LICENSE)
+**Version:** `1.1.1` · **License:** [Talarian Work License](LICENSE)
 
 Work in Google Sheets with an agent: from everyday spreadsheet work (formulas, formatting, data cleanup, restructuring, charts, pivots) to multi-step large-scale workflows involving bulk processing with AI and web search (content generation, categorization, translation, enrichment, extraction, scoring) as well as consolidating sheets from multiple spreadsheets.
 
@@ -72,7 +72,7 @@ Notes on the inputs:
 
 To use Autosheet MCP you need:
 
-- **A [GPT for Work](https://gptforwork.com/) account.** You sign in with your Google account. Available usage or credits are required for agent work, but not for the sheet-copy tool. If you do not have a GPT for Work account, the sign-in process automatically creates a free-trial account for you. Once the free trial has ended, [upgrade to a paid plan](https://gptforwork.com/docs/admin/billing/subscription/manage-your-plan) to continue using the spreadsheet agent.
+- **An [Autosheet](https://autosheet.com/) account.** You sign in with your Google account. Available usage or credits are required for agent work, but not for the sheet-copy tool. If you do not have an Autosheet account, the sign-in process automatically creates a free-trial account for you. Once the free trial has ended, [upgrade to a paid plan](https://autosheet.com/docs/admin/billing/subscription/manage-your-plan) to continue using the spreadsheet agent.
 
 - **Access to the Google Sheets spreadsheets you want Autosheet to work on.** The spreadsheet agent requires edit access. The sheet-copy tool requires read access to the source and edit access to the destination. Autosheet accesses spreadsheets through your Google account.
 
@@ -80,7 +80,7 @@ To use Autosheet MCP you need:
 
 > **TIP**
 >
-> The sign-in process creates an Autosheet API key. The key is how Autosheet MCP identifies you, so the agent can reach the spreadsheets your Google account can edit. You can manage the key in the [GPT for Work dashboard](https://dashboard.gptforwork.com/).
+> The sign-in process creates an Autosheet API key. The key is how Autosheet MCP identifies you, so the agent can reach the spreadsheets your Google account can edit. You can manage the key in the [Autosheet dashboard](https://dashboard.autosheet.com/).
 
 ### ChatGPT
 
@@ -523,7 +523,7 @@ The sheet-copy tool copies sheets, not spreadsheet files. See [Copying a sheet](
 
 **A sheet-copy call timed out or its result is unclear.** Check the destination spreadsheet before retrying. The copy may have succeeded despite the timeout, and every call appends a new sheet. Retrying a successful call creates a duplicate.
 
-**Every tool call fails with a Google connection error.** Connecting your client succeeds even when your Autosheet API key has no Google account attached, so the problem only shows up on the first tool call. Connect Google in the [GPT for Work dashboard](https://dashboard.gptforwork.com/), then try again.
+**Every tool call fails with a Google connection error.** Connecting your client succeeds even when your Autosheet API key has no Google account attached, so the problem only shows up on the first tool call. Connect Google in the [Autosheet dashboard](https://dashboard.autosheet.com/), then try again.
 
 **The spreadsheet URL or ID is rejected.** Supply either the full Google Sheets URL or the bare ID. In a URL such as `https://docs.google.com/spreadsheets/d/1etZyGGQPami0R9D2W6WlJMWbrd_JvStLDdsteFegnko/edit`, the ID is the part between `/d/` and `/edit`. Links from other Google products, and shortened links, may not contain the ID.
 
@@ -543,21 +543,21 @@ The sheet-copy tool copies sheets, not spreadsheet files. See [Copying a sheet](
 
 ## Support and policies
 
-- [Contact support](https://support.gptforwork.com/hc/en-us/requests/new)
+- [Contact support](https://support.autosheet.com/hc/en-us/requests/new)
 
 - [Trust center](https://security.talarian.io)
 
-- [Security and privacy FAQ](https://gptforwork.com/help/get-started/security-privacy-faq)
+- [Security and privacy FAQ](https://autosheet.com/docs/resources/security-and-privacy-faq)
 
 - [Privacy policy](https://talarian.io/privacy-policy)
 
-- [Terms of service](https://gptforwork.com/terms-of-service)
+- [Terms of service](https://autosheet.com/terms-of-service)
 
 - [Data processing agreement](https://talarian.io/data-processing-agreement)
 
-- [Pricing](https://gptforwork.com/pricing)
+- [Pricing](https://autosheet.com/pricing)
 
-- [Release notes](https://gptforwork.com/help/get-started/release-notes)
+- [Release notes](https://autosheet.com/docs/resources/release-notes)
 
 To report a security vulnerability, follow the responsible disclosure process on the [Talarian trust center](https://security.talarian.io).
 

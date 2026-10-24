@@ -1,16 +1,16 @@
 # About Autosheet
 
-Autosheet is the spreadsheet agent that powers GPT for Sheets, made available through an MCP server. Autosheet is part of the GPT for Work service.
+Autosheet is the spreadsheet agent that powers GPT for Sheets, made available through an MCP server.
 
-Sign-in and account management go through the GPT for Work dashboard (https://dashboard.gptforwork.com/). Every new user starts with a free trial. After that, agent work needs a subscription or pay-as-you-go credits. For current plans, see https://gptforwork.com/pricing.
+Sign-in and account management go through the Autosheet dashboard (https://dashboard.autosheet.com/). Every new user starts with a free trial. After that, agent work needs a subscription or pay-as-you-go credits. For current plans, see https://autosheet.com/pricing.
 
-Autosheet and GPT for Work are developed by Talarian (https://talarian.io), a company incorporated in Luxembourg, operating since 2015, and ISO 27001 certified.
+Autosheet is developed by Talarian (https://talarian.io), a company incorporated in Luxembourg, operating since 2015, and ISO 27001 certified.
 
 ## MCP clients and the Google Sheets sidebar
 
 Autosheet can be used from any MCP client that supports remote MCP servers with OAuth. Compatible clients include ChatGPT, Codex, Claude, Claude Code, Cursor, Grok, Grok Bot, Muse, OpenClaw, Hermes, and more.
 
-The same agent is also available in the GPT for Sheets add-on (https://workspace.google.com/marketplace/app/gpt_for_sheets_and_docs/677318054654), which puts the agent chat in a sidebar next to the spreadsheet. Both use the same GPT for Work account and credits.
+The same agent is also available in the GPT for Sheets add-on (https://workspace.google.com/marketplace/app/gpt_for_sheets_%E2%80%93_autosheet/677318054654), which puts the agent chat in a sidebar next to the spreadsheet. Both use the same Autosheet account and credits.
 
 If the user is unsure whether to use the agent from their MCP client or from GPT for Sheets, help them choose.
 
