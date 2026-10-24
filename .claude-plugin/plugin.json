@@ -1,7 +1,7 @@
 {
   "name": "autosheet",
   "displayName": "Autosheet",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Work in Google Sheets with an agent: from everyday spreadsheet work (formulas, formatting, data cleanup, restructuring, charts, pivots) to multi-step large-scale workflows involving bulk processing with AI and web search (content generation, categorization, translation, enrichment, extraction, scoring) as well as consolidating sheets from multiple spreadsheets.",
   "author": {
     "name": "Talarian",
@@ -29,7 +29,7 @@
   ],
   "icon": "./assets/logo.png",
   "documentationUrl": "https://github.com/run-autosheet/autosheet-mcp",
-  "supportUrl": "https://support.gptforwork.com/hc/en-us/requests/new",
+  "supportUrl": "https://support.autosheet.com/hc/en-us/requests/new",
   "privacyPolicyUrl": "https://talarian.io/privacy-policy",
   "termsOfServiceUrl": "https://autosheet.com/terms",
   "skills": "./skills/",

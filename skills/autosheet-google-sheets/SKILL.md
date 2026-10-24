@@ -20,7 +20,7 @@ If the tools are NOT available: Tell the user that the Autosheet MCP server must
 
 If the tools are available: Proceed with the user's actual task. Do not make a dummy call to test the connection. Every tool needs authentication and none will work without it. The client handles authentication through OAuth and may open a browser window for Google sign-in on the first real tool call, and again if the sign-in expires. If a call fails to authenticate, ask the user to complete the sign-in or run their client's sign-in step (see references/setup/ for their client), then retry the same call once. If it still fails, report the error rather than retrying further. Two failures look like connection problems but are not:
 
-- Every call fails with a Google connection error: The user's Autosheet account has no Google account connected. Ask them to connect one in the GPT for Work dashboard (https://dashboard.gptforwork.com/), then retry.
+- Every call fails with a Google connection error: The user's Autosheet account has no Google account connected. Ask them to connect one in the Autosheet dashboard (https://dashboard.autosheet.com/), then retry.
 - Sign-in succeeded but the tools still fail or are missing: The client needs a new session or chat before it picks up the connection.
 
 The authenticated Google account must have edit access to the target spreadsheet. Copying a sheet requires read access to the source spreadsheet and edit access to the destination, and does not consume usage or credits.
@@ -136,7 +136,7 @@ The agent can bulk-process hundreds of thousands of rows, one row at a time, wit
 
 ## AI models
 
-Autosheet uses three AI models, all set by the user in the GPT for Work dashboard (https://dashboard.gptforwork.com/): the default agent model, the default bulk model, and the default bulk model for web enrichment. The agent picks between the two bulk models per task, but neither you nor the agent can choose a model per call. If the user wants different quality, speed, or cost, point them to the dashboard's Models page.
+Autosheet uses three AI models, all set by the user in the Autosheet dashboard (https://dashboard.autosheet.com/): the default agent model, the default bulk model, and the default bulk model for web enrichment. The agent picks between the two bulk models per task, but neither you nor the agent can choose a model per call. If the user wants different quality, speed, or cost, point them to the dashboard's Models page.
 
 ## How to track usage costs
 

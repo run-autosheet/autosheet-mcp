@@ -8,7 +8,7 @@ Relay these steps to the user, written out. Do not add steps that aren't listed 
 
 To use Autosheet MCP you need:
 
-- A [GPT for Work](https://gptforwork.com/) account. You sign in with your Google account. Available usage or credits are required for agent work, but not for the sheet-copy tool. If you do not have a GPT for Work account, the sign-in process automatically creates a free-trial account for you. Once the free trial has ended, [upgrade to a paid plan](https://gptforwork.com/docs/admin/billing/subscription/manage-your-plan) to continue using the spreadsheet agent.
+- An [Autosheet](https://autosheet.com/) account. You sign in with your Google account. Available usage or credits are required for agent work, but not for the sheet-copy tool. If you do not have an Autosheet account, the sign-in process automatically creates a free-trial account for you. Once the free trial has ended, [upgrade to a paid plan](https://autosheet.com/docs/admin/billing/subscription/manage-your-plan) to continue using the spreadsheet agent.
 
 - Access to the Google Sheets spreadsheets you want Autosheet to work on. The spreadsheet agent requires edit access. The sheet-copy tool requires read access to the source and edit access to the destination. Autosheet accesses spreadsheets through your Google account.
 
@@ -16,7 +16,7 @@ Signing in. Your client authenticates to Autosheet MCP with OAuth. Autosheet ope
 
 TIP
 
-The sign-in process creates an Autosheet API key. The key is how Autosheet MCP identifies you, so the agent can reach the spreadsheets your Google account can edit. You can manage the key in the [GPT for Work dashboard](https://dashboard.gptforwork.com/).
+The sign-in process creates an Autosheet API key. The key is how Autosheet MCP identifies you, so the agent can reach the spreadsheets your Google account can edit. You can manage the key in the [Autosheet dashboard](https://dashboard.autosheet.com/).
 
 ## Codex CLI
 
@@ -58,6 +58,6 @@ Sign-in fails, or the client says Autosheet needs authentication. Run your clien
 
 Browser sign-in in a terminal, a remote session, or a headless environment. In the Codex CLI, connect the Autosheet plugin in ChatGPT on any device, and then select I've installed it in the CLI. In the Claude Code CLI, connect the Autosheet connector in Claude on any device, and then start a new CLI session. Signing in from the CLI itself with /mcp needs a browser on the machine running the CLI.
 
-Every tool call fails with a Google connection error. Connecting your client succeeds even when your Autosheet API key has no Google account attached, so the problem only shows up on the first tool call. Connect Google in the [GPT for Work dashboard](https://dashboard.gptforwork.com/), then try again.
+Every tool call fails with a Google connection error. Connecting your client succeeds even when your Autosheet API key has no Google account attached, so the problem only shows up on the first tool call. Connect Google in the [Autosheet dashboard](https://dashboard.autosheet.com/), then try again.
 
 Problems with your client itself. If your client will not add the connector or plugin, does not pick up its configuration file, does not recognize a command, or does not show the setup screens described here, that is a client-side problem rather than an Autosheet problem. Client interfaces change, so yours may differ from what is described here. Check your client's own documentation.
