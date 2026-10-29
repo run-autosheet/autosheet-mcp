@@ -25,6 +25,8 @@ If the tools are available: Proceed with the user's actual task. Do not make a d
 
 The authenticated Google account must have edit access to the target spreadsheet. Copying a sheet requires read access to the source spreadsheet and edit access to the destination, and does not consume usage or credits.
 
+If the user asks about their own Autosheet account, such as their plan, trial, credits, or billing, call autosheet_get_account.
+
 If the user asks about Autosheet itself, such as pricing, the company, or working in the Google Sheets sidebar instead, read references/about.md.
 
 ## Available tools
@@ -35,11 +37,14 @@ Autosheet MCP provides the following tools:
 | --- | --- | --- |
 | autosheet_start_agent_google_sheets_spreadsheet | prompt, spreadsheet_id | Start a new Autosheet agent. Each agent gets its own UUID (agent_id). |
 | autosheet_follow_up_agent | prompt, agent_id | Send a follow-up to an existing Autosheet agent. |
-| autosheet_get_agent | agent_id, wait_seconds? (default 25, max 50) | Fetch the current status and latest-turn messages and outcome for an Autosheet agent. Status can be available (it has finished its latest turn and can be followed up) or busy (it is still running and cannot yet receive a follow-up) |
+| autosheet_get_agent | agent_id, wait_seconds? (default 25, max 50) | Fetch the current status and latest-turn messages and outcome for an Autosheet agent. Status can be available (it has finished its latest turn and can be followed up) or busy (it is still running and cannot yet receive a follow-up). |
 | autosheet_stop_agent | agent_id | Stop a running Autosheet agent. Use when the agent is clearly going the wrong path or the user explicitly asks to stop the agent. |
 | autosheet_copy_tab_from_one_spreadsheet_to_another | source_spreadsheet_id, destination_spreadsheet_id, and one of sheet_id (the gid from the URL, if present) or sheet_name (exact sheet title) | Copy a sheet to another spreadsheet, or duplicate it within the same spreadsheet. |
+| autosheet_get_account | none | Fetch the connected Autosheet account's details: email, space, role, plan, billing status, credits, and included monthly usage, matching what the Autosheet dashboard shows. |
 
 The four agent tools return a text summary of the latest turn and structured results with outcome, agent_id, status, and usage (see "How to run an Autosheet agent" and "How to track usage costs"). The copy tool returns its result directly: outcome and the new sheet's sheet_id and title. It has no agent_id, polling or follow-ups.
+
+The account tool returns a text summary and structured results with outcome, space, billing, credits, and dashboard links. It has no agent_id. On a subscription, a balance does not guarantee that the agent can run: the billing status and spending limits can still block usage. Clients that support MCP Apps also show the user an account card with the same figures. When the card is shown, do not repeat or summarize it: reply in at most one short sentence, or answer only the specific question the user asked.
 
 If you need to interpret a response field that isn't explained here, read references/agent_tool_example_responses.md.
 
@@ -140,7 +145,7 @@ Autosheet uses three AI models, all set by the user in the Autosheet dashboard (
 
 ## How to track usage costs
 
-Every start and follow-up call runs a paid agent turn. The copy tool does not use credits. Tell the user the cost of each finished turn.
+Every start and follow-up call runs a paid agent turn. The copy and account tools do not use credits. Tell the user the cost of each finished turn. To see the user's remaining credits or included monthly usage, call autosheet_get_account.
 
 Tool results report the cost:
 
@@ -159,7 +164,7 @@ The agent cannot estimate the cost of a future run from scratch. To project a fu
 
 ## Troubleshooting and common pitfalls
 
-- For usage, credit, or access problems, follow the action_required rule in "How to run an Autosheet agent": Relay the message and any dashboard link to the user exactly as given.
+- For usage, credit, or access problems, follow the action_required rule in "How to run an Autosheet agent": Relay the message and any dashboard link to the user exactly as given. If the user wants to see their plan status or remaining credits, call autosheet_get_account.
 - If the agent is clearly going the wrong way, or the user asks you to stop it, call autosheet_stop_agent. Then course-correct with a follow-up.
 - Comparing versions of data (diffing) is not a native operation in Google Sheets. Do not ask the agent for diffs or try to build them yourself; use helper ranges and formulas to compare data instead.
 - IMPORTRANGE needs one-time access approval: The first time a spreadsheet imports from another spreadsheet, the user must click "Allow access" in the cell. The agent cannot approve it.

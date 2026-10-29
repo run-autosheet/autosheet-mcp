@@ -28,7 +28,7 @@ Depending on your client, you either install Autosheet from the client's directo
 
 ## Plugin package
 
-**Version:** `1.1.2` · **License:** [Talarian Work License](LICENSE)
+**Version:** `1.2.0` · **License:** [Talarian Work License](LICENSE)
 
 Work in Google Sheets with an agent: from everyday spreadsheet work (formulas, formatting, data cleanup, restructuring, charts, pivots) to multi-step large-scale workflows involving bulk processing with AI and web search (content generation, categorization, translation, enrichment, extraction, scoring) as well as consolidating sheets from multiple spreadsheets.
 

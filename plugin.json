@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "autosheet",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Work in Google Sheets with an agent: from everyday spreadsheet work (formulas, formatting, data cleanup, restructuring, charts, pivots) to multi-step large-scale workflows involving bulk processing with AI and web search (content generation, categorization, translation, enrichment, extraction, scoring) as well as consolidating sheets from multiple spreadsheets.",
   "author": {
     "name": "Talarian",
